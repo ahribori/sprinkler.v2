@@ -1,7 +1,8 @@
 import jsdom from 'jsdom';
+import log from '../logger';
+import { run } from '../selenium';
 
 const { JSDOM } = jsdom;
-import { run } from '../selenium';
 
 /**
  * 다음 실시간 검색어 가져오기
@@ -26,6 +27,7 @@ const getHotTopicList = async (browser) => {
             link,
         });
     }
+    log.debug('실시간 검색어\n', hotTopicList);
     return hotTopicList;
 };
 
@@ -41,7 +43,19 @@ const searchByHotTopicList = async (hotTopicList, browser) => {
     const html = await browser.getHTML('#cMain');
     const dom = new JSDOM(html);
     const document = dom.window.document;
-    console.log(document.querySelector('#profColl'));
+
+    /**
+     * 관련 검색어
+     */
+    const getRelatedKeywords = () => {
+        const relatedKeywords = [];
+        const list = document.querySelectorAll('#netizenColl_right.content_keyword .list_keyword a span');
+        for (let i = 0, count = list.length; i < count; i++) {
+            relatedKeywords.push(list[i].innerHTML);
+        }
+        log.debug('관련 검색어\n', relatedKeywords);
+    };
+    getRelatedKeywords();
 };
 
 export default {

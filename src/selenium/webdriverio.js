@@ -1,3 +1,4 @@
+import log from '../logger';
 const webdriverio = require('webdriverio');
 
 export default {
@@ -14,8 +15,10 @@ export default {
             port: process.env.SELENIUM_PORT || 4444,
         };
         const browser = webdriverio.remote(seleniumOptions);
+        log.debug('========================== START ==========================');
         await browser.init();
         await actions(browser);
         await browser.end();
+        log.debug('========================== FINISH ==========================');
     }
 }
