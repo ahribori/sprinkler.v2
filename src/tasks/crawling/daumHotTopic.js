@@ -1,6 +1,6 @@
 import jsdom from 'jsdom';
-import log from '../logger';
-import { run } from '../selenium';
+import log from '@logger';
+import { run } from '@selenium';
 
 const { JSDOM } = jsdom;
 
@@ -9,7 +9,7 @@ const { JSDOM } = jsdom;
  * @param browser
  * @returns {Promise<Array>}
  */
-const getHotTopicList = async (browser) => {
+export const getHotTopicList = async (browser) => {
     await browser.url('https://www.daum.net');
     const html = await browser.getHTML('.hotissue_builtin');
     const dom = new JSDOM(html);
@@ -37,7 +37,7 @@ const getHotTopicList = async (browser) => {
  * @param browser
  * @returns {Promise<null>}
  */
-const searchByHotTopicList = async (hotTopicList, browser) => {
+export const searchByHotTopicList = async (hotTopicList, browser) => {
     if (hotTopicList.length === 0) return null;
     await browser.url(hotTopicList[0].link);
     const html = await browser.getHTML('#cMain');

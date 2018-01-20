@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import clear from 'cli-clear';
 import inquirer from 'inquirer';
 import seleniumStandalone from './selenium/seleniumStandalone';
-import crawlDaumHotTopic from './crawling/daumHotTopic';
+import crawlDaumHotTopic from './tasks/crawling/daumHotTopic';
 
 seleniumStandalone.start(() => {
     clear();
