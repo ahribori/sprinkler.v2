@@ -1,4 +1,5 @@
 import log from '../logger';
+
 const webdriverio = require('webdriverio');
 
 export default {
@@ -14,11 +15,16 @@ export default {
             host: process.env.SELENIUM_HOST || '127.0.0.1',
             port: process.env.SELENIUM_PORT || 4444,
         };
-        const browser = webdriverio.remote(seleniumOptions);
-        log.debug('========================== START ==========================');
-        await browser.init();
-        await actions(browser);
-        await browser.end();
-        log.debug('========================== FINISH ==========================');
+        try {
+            log.debug('========================== START ==========================');
+            const browser = webdriverio.remote(seleniumOptions);
+            await browser.init();
+            const results = await actions(browser);
+            await browser.end();
+            log.debug('========================== FINISH ==========================');
+            return results;
+        } catch (e) {
+            log.error(e);
+        }
     }
 }
