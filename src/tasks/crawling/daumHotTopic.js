@@ -23,7 +23,7 @@ export const getHotTopicList = async (browser) => {
         const link = anchor.getAttribute('href');
         hotTopicList.push(issue);
     }
-    log.debug('실시간 검색어\n', hotTopicList);
+    log.info('[daumHotTopic.getHotTopicList]', '실시간 검색어\n', hotTopicList);
     return hotTopicList;
 };
 
@@ -35,7 +35,7 @@ export const getHotTopicList = async (browser) => {
  */
 export const searchByKeyword = async (keyword, browser) => {
     if (!keyword || keyword === undefined || keyword === null || keyword === '') {
-        log.warn('[daumHotTopic.js] searchByKeyword method의 keyword parameter가 올바르지 않습니다');
+        log.warn('[daumHotTopic.searchByKeyword]', '(!keyword || keyword === undefined || keyword === null || keyword === \'\')');
         return null;
     }
     await browser.url(`http://search.daum.net/search?w=tot&q=${keyword}`);
@@ -53,7 +53,7 @@ export const searchByKeyword = async (keyword, browser) => {
         for (let i = 0, count = list.length; i < count; i++) {
             relatedKeywords.push(list[i].innerHTML);
         }
-        log.debug('관련 검색어\n', relatedKeywords);
+        log.info('[daumHotTopic.getRelatedKeywords]', '관련 검색어\n', relatedKeywords);
         return relatedKeywords;
     };
 
@@ -63,7 +63,7 @@ export const searchByKeyword = async (keyword, browser) => {
      */
     const getProfile = () => {
         const profile = document.querySelector('#profColl .rwd_info');
-        log.debug('프로필\n', profile ? profile.innerHTML : '프로필이 없습니다');
+        log.info('[daumHotTopic.getProfile]', profile ? 'Profile exist' : 'Profile not exist');
         if (!profile) {
             return null;
         }
@@ -91,12 +91,12 @@ export const searchByKeyword = async (keyword, browser) => {
                     thumbnail_image: thumb[0],
                 });
             } catch (e) {
-                log.error(`[daumHotTopic.js] getNews - ${e}`)
+                log.error('[daumHotTopic.getNews]', e);
             }
         }
+        log.info('[daumHotTopic.getNews]', news.length > 0 ? news : 'News not exist');
         return news.length > 0 ? news : null;
     };
-
 
     const news = await getNews();
     return {

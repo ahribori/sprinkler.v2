@@ -1,8 +1,5 @@
-import jsdom from 'jsdom';
 import log from '@logger';
 import { run } from '@selenium';
-
-const { JSDOM } = jsdom;
 
 /**
  * 구글 번역
@@ -13,17 +10,17 @@ const { JSDOM } = jsdom;
  */
 const translate = async (text, translateTo, browser) => {
     if (!text || text === undefined || text === null || text === '') {
-        log.warn('[googleTranslate.js] translateToEnglish method의 text parameter가 올바르지 않습니다');
+        log.warn('[googleTranslate.translate]', '(!text || text === undefined || text === null || text === \'\')');
         return null;
     }
-    log.debug(`"${text}" will be translate to ${translateTo}`);
+    log.info('[googleTranslate.translate]', `"${text.length > 100 ? text.substring(0, 100) + '...' : text}" Will be translate to ${translateTo}`);
     await browser.url(`https://translate.google.co.kr/#auto/${translateTo}`);
     await browser.setValue('#source', text);
     await browser.click('#gt-submit');
-    log.debug(`In translation...`);
+    log.info('[googleTranslate.translate]', `In translation...`);
     await browser.waitForText('#gt-res-dir-ctr', 60000);
     const result = await browser.getText('#gt-res-dir-ctr');
-    log.debug(`Translation result ===> ${result}`);
+    log.info('[googleTranslate.translate]', `Translation result: ${result.length > 100 ? result.substring(0, 100) + '...' : result}`);
     return result;
 };
 
