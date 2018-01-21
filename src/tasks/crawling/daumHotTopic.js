@@ -83,7 +83,9 @@ export const searchByKeyword = async (keyword, browser) => {
                 if (!thumbnailWrapper) {
                     continue;
                 }
-                const url = thumbnailWrapper.getAttribute('href').split('?')[0];
+                const href = thumbnailWrapper.getAttribute('href');
+                const url = new RegExp(/v.media.daum.net/).test(href) ?
+                    href.split('?')[0] : href;
                 await browser.url(url);
                 const title = await browser.getAttribute('meta[property="og:title"]', 'content');
                 const desc = await browser.getAttribute('meta[property="og:description"]', 'content');
