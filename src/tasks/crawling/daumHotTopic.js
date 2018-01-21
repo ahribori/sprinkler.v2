@@ -79,7 +79,11 @@ export const searchByKeyword = async (keyword, browser) => {
         const news = [];
         for (let i = 0, count = newsList.length; i < count; i++) {
             try {
-                const url = newsList[i].querySelector('.wrap_thumb a').getAttribute('href').split('?')[0];
+                const thumbnailWrapper = newsList[i].querySelector('.wrap_thumb a');
+                if (!thumbnailWrapper) {
+                    continue;
+                }
+                const url = thumbnailWrapper.getAttribute('href').split('?')[0];
                 await browser.url(url);
                 const title = await browser.getAttribute('meta[property="og:title"]', 'content');
                 const desc = await browser.getAttribute('meta[property="og:description"]', 'content');
@@ -87,7 +91,7 @@ export const searchByKeyword = async (keyword, browser) => {
                 news.push({
                     link: url,
                     title,
-                    description: desc.replace(/\[.+]/, '').trim(),
+                    description: desc,
                     thumbnail_image: thumb[0],
                 });
             } catch (e) {
