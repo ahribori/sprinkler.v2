@@ -1,4 +1,6 @@
 import chalk from 'chalk';
+import fs from 'fs';
+import path from 'path';
 import clear from 'cli-clear';
 import inquirer from 'inquirer';
 import seleniumStandalone from './selenium/seleniumStandalone';
@@ -10,6 +12,21 @@ const MENU = {
     crawlDaumHotTopic: '다음 검색어 기반 크롤링'
 };
 
+const choices = [
+    MENU.googleTranslate,
+    MENU.crawlDaumHotTopic,
+];
+const runnablePath = path.resolve('__runnable__');
+fs.existsSync(runnablePath) || fs.mkdirSync(runnablePath);
+const __RUNNABLE__ = fs.readdirSync(path.resolve('__runnable__'));
+__RUNNABLE__.forEach(value => {
+    console.log(value);
+    if (new RegExp(/.js$/).test(value)) {
+        choices.unshift(value);
+
+    }
+});
+
 seleniumStandalone.start(() => {
     clear();
 
@@ -18,10 +35,7 @@ seleniumStandalone.start(() => {
             type: 'list',
             name: 'menu',
             message: 'Select menu',
-            choices: [
-                MENU.googleTranslate,
-                MENU.crawlDaumHotTopic,
-            ]
+            choices,
         }
     ];
 
@@ -37,6 +51,7 @@ seleniumStandalone.start(() => {
                 break;
             }
             default:
+                require(path.join(path.resolve('__runnable__'), menu));
         }
     });
 });
