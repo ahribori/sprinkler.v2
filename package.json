@@ -21,8 +21,9 @@
           ],
           "alias": {
             "@selenium": "./src/selenium",
-			  "@logger": "./src/logger",
-			  "@tasks": "./src/tasks"
+			  "@tasks": "./src/tasks",
+			  "@logger": "./src/util/logger",
+			  "@cron": "./src/util/cron"
           }
         }
       ]
