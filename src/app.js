@@ -6,6 +6,7 @@ import inquirer from 'inquirer';
 import seleniumStandalone from './selenium/seleniumStandalone';
 import crawlDaumHotTopic from './tasks/crawling/daumHotTopic';
 import googleTranslate from './tasks/translate/googleTranslate';
+import './schedules/test';
 
 const MENU = {
     googleTranslate: '구글 번역',
@@ -28,7 +29,6 @@ __RUNNABLE__.forEach(value => {
 });
 
 seleniumStandalone.start(() => {
-    clear();
 
     const questions = [
         {
