@@ -23,7 +23,8 @@
             "@selenium": "./src/selenium",
 			  "@tasks": "./src/tasks",
 			  "@logger": "./src/util/logger",
-			  "@cron": "./src/util/cron"
+			  "@cron": "./src/util/cron",
+			  "@schedules": "./src/schedules"
           }
         }
       ]

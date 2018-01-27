@@ -1,12 +1,12 @@
-import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
+import chalk from 'chalk';
 import clear from 'cli-clear';
 import inquirer from 'inquirer';
 import seleniumStandalone from './selenium/seleniumStandalone';
 import crawlDaumHotTopic from './tasks/crawling/daumHotTopic';
 import googleTranslate from './tasks/translate/googleTranslate';
-import './schedules/test';
+import '@schedules';
 
 const MENU = {
     googleTranslate: '구글 번역',
