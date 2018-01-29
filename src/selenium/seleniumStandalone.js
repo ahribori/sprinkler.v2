@@ -1,5 +1,7 @@
+if (process.env.NODE_ENV === 'production') {
+    require('./polyfill');
+}
 import selenium from 'selenium-standalone';
-
 let seleniumStandaloneInstance = null;
 
 export default {
