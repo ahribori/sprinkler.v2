@@ -40,6 +40,7 @@ export default class PermanentSession {
                 this.pending();
             } else {
                 log.info('[permanentSession.pending]', 'Stop pending');
+                this.printTransactionQueueStatus();
                 const transaction = this.transactionQueue.shift();
                 if (typeof transaction === 'function') {
                     log.info('[permanentSession.pending]', 'Execute transaction');
@@ -61,5 +62,10 @@ export default class PermanentSession {
         }
         log.info('[permanentSession.enqueueTransaction]', 'Enqueue transaction');
         this.transactionQueue.push(transaction);
+        this.printTransactionQueueStatus();
+    };
+
+    printTransactionQueueStatus = () => {
+        log.info('[permanentSession.printTransactionQueueStatus]', `Number of transaction in queue : ${this.transactionQueue.length}`);
     };
 }
