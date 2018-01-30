@@ -41,6 +41,7 @@ export default class PermanentSession {
             } else {
                 log.info('[permanentSession.pending]', 'Stop pending');
                 this.printTransactionQueueStatus();
+                log.info('[permanentSession.pending]', 'Dequeue transaction');
                 const transaction = this.transactionQueue.shift();
                 if (typeof transaction === 'function') {
                     log.info('[permanentSession.pending]', 'Execute transaction');
