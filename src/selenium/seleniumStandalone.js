@@ -9,7 +9,7 @@ export default {
         selenium.start((err, child) => {
             seleniumStandaloneInstance = child;
             child.stderr.on('data', function (data) {
-                // console.log(data.toString());
+                console.log(data.toString());
             });
             if (typeof callback === 'function') {
                 callback();
