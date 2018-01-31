@@ -18,9 +18,7 @@ export const getHotTopicList = async (browser) => {
     const hotTopicList = [];
     for (let i = 0, length = lis.length; i < length; i++) {
         const anchor = lis[i].querySelector('a');
-        const rank = i + 1;
         const issue = anchor.innerHTML;
-        const link = anchor.getAttribute('href');
         hotTopicList.push(issue);
     }
     log.info('[daumHotTopic.getHotTopicList]', '실시간 검색어\n', hotTopicList);

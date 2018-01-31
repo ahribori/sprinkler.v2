@@ -32,6 +32,7 @@ export default class PermanentSession {
         log.info('[permanentSession.init] Initialize browser');
         await this.browser.init();
         await this.pending();
+        log.info('[permanentSession.init]', 'Start pending');
     };
 
     pending = () => {
