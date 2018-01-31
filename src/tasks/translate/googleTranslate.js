@@ -15,7 +15,9 @@ const translate = async (text, translateTo, browser) => {
     }
     log.info('[googleTranslate.translate]', `"${text.length > 100 ? text.substring(0, 100) + '...' : text}" Will be translate to ${translateTo}`);
     await browser.url(`https://translate.google.co.kr/#auto/${translateTo}`);
-    await browser.setValue('#source', text);
+    await browser.execute((text) => {
+        document.querySelector('#source').value = text;
+    }, text);
     await browser.click('#gt-submit');
     log.info('[googleTranslate.translate]', `In translation...`);
     await browser.waitForText('#gt-res-dir-ctr', 60000);

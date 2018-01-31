@@ -8,7 +8,9 @@ export const summarize = async (text, browser) => {
     }
     log.info('[summary.summarize]', `"${text.length > 100 ? text.substring(0, 100) + '...' : text}" Will be summarize`);
     await browser.url('https://summariz3.herokuapp.com');
-    await browser.setValue('#home-content', text);
+    await browser.execute((text) => {
+        document.querySelector('#home-content').value = text;
+    }, text);
     await browser.click('button[type=submit]');
     log.info('[summary.summarize]', `In summary...`);
     const result = await browser.getText('#home-result ol li');
