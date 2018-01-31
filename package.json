@@ -7,7 +7,8 @@
 		"postinstall": "babel-node ./scripts/installSeleniumStandalone.js",
 		"build": "node_modules/.bin/cross-env NODE_ENV=production babel src --out-dir build",
 		"start": "node ./scripts/start.js",
-		"dev": "node_modules/.bin/nodemon --exec babel-node scripts/dev.js --watch src"
+		"dev": "node_modules/.bin/nodemon --exec babel-node scripts/dev.js --watch src",
+		"clean": "node ./scripts/clean.js"
 	},
 	"author": "",
 	"license": "ISC",
