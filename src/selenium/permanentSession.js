@@ -40,9 +40,8 @@ export default class PermanentSession {
                 this.pending();
             } else {
                 log.info('[permanentSession.pending]', 'Stop pending');
-                this.printTransactionQueueStatus();
-                log.info('[permanentSession.pending]', 'Dequeue transaction');
                 const transaction = this.transactionQueue.shift();
+                log.info('[permanentSession.pending]', `Dequeue transaction (queue=${this.transactionQueue.length})`);
                 if (typeof transaction === 'function') {
                     log.info('[permanentSession.pending]', 'Execute transaction');
                     await transaction(this.browser);
@@ -61,12 +60,7 @@ export default class PermanentSession {
             log.error('[permanentSession.enqueueTransaction]', error);
             throw error;
         }
-        log.info('[permanentSession.enqueueTransaction]', 'Enqueue transaction');
         this.transactionQueue.push(transaction);
-        this.printTransactionQueueStatus();
-    };
-
-    printTransactionQueueStatus = () => {
-        log.info('[permanentSession.printTransactionQueueStatus]', `Number of transaction in queue : ${this.transactionQueue.length}`);
+        log.info('[permanentSession.enqueueTransaction]', `Enqueue transaction (queue=${this.transactionQueue.length})`);
     };
 }
