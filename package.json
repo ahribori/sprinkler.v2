@@ -5,7 +5,7 @@
 	"main": "app.js",
 	"scripts": {
 		"postinstall": "babel-node ./scripts/installSeleniumStandalone.js",
-		"build": "node_modules/.bin/cross-env NODE_ENV=production babel src --out-dir build",
+		"build": "rimraf build && babel src --out-dir build",
 		"start": "node ./scripts/start.js",
 		"dev": "node_modules/.bin/nodemon --exec babel-node scripts/dev.js --watch src",
 		"clean": "node ./scripts/clean.js"
@@ -44,6 +44,7 @@
 		"jsdom": "^11.5.1",
 		"process-list": "^1.2.2",
 		"prompt-checkbox": "^2.2.0",
+		"rimraf": "^2.6.2",
 		"selenium-standalone": "^6.12.0",
 		"webdriverio": "^4.10.1",
 		"winston": "^2.4.0",
