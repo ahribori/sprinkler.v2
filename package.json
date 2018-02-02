@@ -28,7 +28,7 @@
 						"@tasks": "./src/tasks",
 						"@logger": "./src/util/logger",
 						"@cron": "./src/util/cron",
-						"@schedules": "./src/schedules"
+						"@runnable": "./src/runnable"
 					}
 				}
 			]
@@ -43,6 +43,7 @@
 		"fkill": "^5.2.0",
 		"jsdom": "^11.5.1",
 		"process-list": "^1.2.2",
+		"prompt-checkbox": "^2.2.0",
 		"selenium-standalone": "^6.12.0",
 		"webdriverio": "^4.10.1",
 		"winston": "^2.4.0",
