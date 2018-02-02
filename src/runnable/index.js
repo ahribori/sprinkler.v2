@@ -18,6 +18,7 @@ if (process.env.NODE_ENV === 'production') {
         message: 'Which scripts do you want to execute?',
         radio: true,
         choices: files,
+        default: files,
     });
     prompt.run()
         .then(answers => {
