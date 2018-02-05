@@ -4,7 +4,7 @@ import seleniumStandalone from '@selenium/seleniumStandalone';
 const { snapshot } = require('process-list');
 
 seleniumStandalone.start(() => {
-    require('@runnable');
+    require('./runnable');
 });
 
 process.on('SIGINT', async () => {
