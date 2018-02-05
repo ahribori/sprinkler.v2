@@ -8,8 +8,10 @@ import {
     getHotTopicList,
     searchByKeyword,
 } from '../tasks/crawling/daumHotTopic';
-import { buildPost } from "../tasks/post/daumHotTopic";
-import { login } from "../tasks/login/tistory";
+import { buildPost } from '../tasks/post/daumHotTopic';
+import { login } from '../tasks/login/tistory';
+import { closePopup } from '../tasks/util/closePopup';
+
 const ps = new PermanentSession();
 
 const job = new cron('0 0,10,20,30,40,50 * * * *', () => {
@@ -39,8 +41,9 @@ const job = new cron('0 0,10,20,30,40,50 * * * *', () => {
             log.info('[runnable.pollingHotTopic.js]', willPost);
             for (let i = 0, count = willPost.length; i < count; i++) {
                 const result = await searchByKeyword(willPost[i], browser);
+                await closePopup(browser);
                 await buildPost(willPost[i], result.relatedKeywords, result.profile, result.news);
-                await browser.pause(10000);
+                await browser.pause(3000);
             }
         }
     });
