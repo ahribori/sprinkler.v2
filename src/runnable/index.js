@@ -4,7 +4,7 @@ import Prompt from 'prompt-checkbox';
 import PermanentSession from '@selenium/permanentSession';
 
 const filePathList = fs.readdirSync(__dirname);
-const filter = new RegExp(/(.js)$/);
+const filter = process.env.NODE_ENV === 'production' ? new RegExp(/(.js)$/) : new RegExp(/(.dev.js)$/);
 const files = [];
 filePathList.forEach(file => {
     if (file !== 'index.js' && filter.test(file)) {

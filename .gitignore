@@ -1,5 +1,5 @@
 build
-__runnable__/**
+src/runnable/**/*.dev.js
 # Created by .ignore support plugin (hsz.mobi)
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
