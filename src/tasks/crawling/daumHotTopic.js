@@ -65,7 +65,25 @@ export const searchByKeyword = async (keyword, browser) => {
         if (!profile) {
             return null;
         }
-        return profile.innerHTML;
+
+        profile.querySelector('a.thumb img').removeAttribute('onerror');
+        const anchors = profile.querySelectorAll('a');
+        anchors.forEach(a => {
+            a.removeAttribute('onclick');
+        });
+
+        const thumbnailImage = profile.querySelector('a.thumb').innerHTML;
+        const infoTitle = profile.querySelector('.info_tit').innerHTML;
+        const $infoDetails = profile.querySelectorAll('dl.dl_comm');
+        let infoDetails = '';
+        for (let i = 0, length = $infoDetails.length; i < length; i++) {
+            infoDetails += $infoDetails[i].innerHTML;
+        }
+        return {
+            thumbnailImage,
+            infoTitle,
+            infoDetails,
+        };
     };
 
     /**
