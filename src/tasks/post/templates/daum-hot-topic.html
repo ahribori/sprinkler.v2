@@ -1,16 +1,73 @@
 <head>
 	<style>
-		.container * {
+		.RTHI * {
 			box-sizing: border-box;
 		}
 
-		.container {
+		.RTHI a {
+			text-decoration: none;
+			color: midnightblue;
+		}
 
+		.RTHI img {
+			display: block;
+			margin: 0 auto;
+		}
+
+		.RTHI .infoTitle {
+			text-align: center;
+			padding-top: 10px;
+			padding-bottom: 20px;
+		}
+
+		.RTHI .infoContainer {
+			font-size: 0.8rem;
+			word-break: keep-all;
+		}
+
+		.RTHI .infoDetails {
+			text-align: center;
+		}
+
+		.RTHI .infoDetailsWrapper {
+			display: inline-block;
+		}
+
+		.RTHI .tit_main b {
+			font-size: 1.4rem;
+		}
+
+		.RTHI .txt_sub {
+			font-size: 1.1rem;
+		}
+
+		.RTHI dt {
+			font-weight: bold;
+			float: left;
+		}
+
+		.RTHI dd {
+			margin-left: 70px;
+			overflow: hidden;
+			text-align: left;
 		}
 	</style>
 </head>
 <body>
-<div class="container">
-	{{contents}}
+<div class="RTHI">
+	<div class="thumbnailImage">
+		{{thumbnailImage}}
+	</div>
+	<div class="infoContainer">
+		<div class="infoTitle">
+			{{infoTitle}}
+		</div>
+
+		<div class="infoDetails">
+			<div class="infoDetailsWrapper">
+				{{infoDetails}}
+			</div>
+		</div>
+	</div>
 </div>
 </body>
