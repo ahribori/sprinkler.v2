@@ -10,8 +10,8 @@ import log from '@logger';
  */
 const makeTitle = (keyword) => {
     const hasPhoneme = (a) => {
-        const r = (a.charCodeAt(0) - parseInt('0xac00',16)) % 28;
-        const t = String.fromCharCode(r + parseInt('0x11A8') -1);
+        const r = (a.charCodeAt(0) - parseInt('0xac00', 16)) % 28;
+        const t = String.fromCharCode(r + parseInt('0x11A8') - 1);
         return t !== 'ᆧ';
     };
     const lastCharacter = keyword[keyword.length - 1];
@@ -43,12 +43,39 @@ const makeTitle = (keyword) => {
  * @param news {array}
  */
 export const buildPost = (keyword, relatedKeywords, profile, news) => {
-    const TITLE = makeTitle(keyword);
-    const TAGS = relatedKeywords;
-    const PROFILE = profile;
-    const NEWS = news;
-    console.log(TITLE);
-    console.log(TAGS);
-    console.log(PROFILE);
-    console.log(NEWS);
+    const templatePath = path.resolve('src/tasks/post/templates');
+    let template = fs.readFileSync(path.join(templatePath, 'daum-hot-topic.html'), 'utf-8');
+    let relatedKeywordsHTML = '';
+    let newsCardListHTML = '';
+    if (profile) {
+        template = template
+            .replace('{{thumbnailImage}}', profile.thumbnailImage)
+            .replace('{{infoTitle}}', profile.infoTitle)
+            .replace('{{infoDetails}}', profile.infoDetails)
+    } else {
+        template = template
+            .replace('{{thumbnailImage}}', '')
+            .replace('{{infoTitle}}', '')
+            .replace('{{infoDetails}}', '')
+    }
+    relatedKeywords.forEach(relatedKeyword => {
+        relatedKeywordsHTML +=
+            `<a class="relatedKeyword" href="http://search.daum.net/search?w=tot&q=${relatedKeyword}" target="_blank">${relatedKeyword}</a>`;
+    });
+    news.forEach(news => {
+        newsCardListHTML +=
+            `<a class="newsCard" href="${news.link}" target="_blank">
+    <div class="newsCard_header">
+        <img src="${news.thumbnail_image}" alt="${news.title}">
+    </div>
+    <div class="newsCard_footer">
+        <div class="newsCard_title">${news.title}</div>
+        <div class="newsCard_description">${news.description}...</div>
+    </div>    
+</a>`;
+    });
+    template = template
+        .replace('{{relatedKeywords}}', relatedKeywordsHTML)
+        .replace('{{news}}', newsCardListHTML);
+    return template;
 };

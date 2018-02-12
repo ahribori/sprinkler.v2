@@ -1,53 +1,20 @@
 require('dotenv').config();
+import fs from 'fs';
+import path from 'path';
 import log from '@logger';
 import cron from '@cron';
 import PermanentSession from '@selenium/permanentSession';
-const ps = new PermanentSession();
 import {
     getHotTopicList,
     searchByKeyword,
 } from '../tasks/crawling/daumHotTopic';
+import { buildPost } from '../tasks/post/daumHotTopic';
+import { login } from '../tasks/login/tistory';
+import { closePopup } from '../tasks/util/closePopup';
 
-const buildPost = (KEYWORD) => {
-    ps.enqueueTransaction(async (browser) => {
-        const result = await searchByKeyword(KEYWORD, browser);
-        const templatePath = path.resolve('src/tasks/post/templates');
-        let template = fs.readFileSync(path.join(templatePath, 'daum-hot-topic.html'), 'utf-8');
-        let relatedKeywords = '';
-        let newsCardList = '';
-        if (result.profile) {
-            template = template
-                .replace('{{thumbnailImage}}', result.profile.thumbnailImage)
-                .replace('{{infoTitle}}', result.profile.infoTitle)
-                .replace('{{infoDetails}}', result.profile.infoDetails)
-        } else {
-            template = template
-                .replace('{{thumbnailImage}}', '')
-        }
-        result.relatedKeywords.forEach(keyword => {
-            relatedKeywords +=
-                `<a class="relatedKeyword" href="http://search.daum.net/search?w=tot&q=${keyword}" target="_blank">${keyword}</a>`;
-        });
-        result.news.forEach(news => {
-            newsCardList +=
-                `<a class="newsCard" href="${news.link}" target="_blank">
-    <div class="newsCard_header">
-        <img src="${news.thumbnail_image}" alt="${news.title}">
-    </div>
-    <div class="newsCard_footer">
-        <div class="newsCard_title">${news.title}</div>
-        <div class="newsCard_description">${news.description}...</div>
-    </div>    
-</a>`;
-        });
-        template = template
-            .replace('{{relatedKeywords}}', relatedKeywords)
-            .replace('{{news}}', newsCardList);
-        fs.writeFileSync(path.join(templatePath, `${Date.now()}_${KEYWORD}.html`), template, 'utf-8');
-    });
-};
+const ps = new PermanentSession();
 
-const job = new cron('0 0 7,8,9,12,13,14,19,21,22,23 * * *', () => {
+const job = new cron('0 0 7,8,9,12,13,14,19,20,21,22,23 * * *', () => {
     const minutesTimeoutRange = 20;
     const secondTimeoutRange = 60;
     const randomTimeoutMinutes = Math.round(Math.random() * (minutesTimeoutRange - 1)); // 0 ~29
@@ -55,7 +22,31 @@ const job = new cron('0 0 7,8,9,12,13,14,19,21,22,23 * * *', () => {
     const timeout = ((randomTimeoutMinutes * 60) + (randomTimeoutSecond)) * 1000;
     log.info(`${randomTimeoutMinutes}분 ${randomTimeoutSecond}초 후에 실행.`);
     setTimeout(() => {
-        log.info(`실행.`);
+        //////////////////
+        ps.enqueueTransaction(async (browser) => {
+            const topicList = await getHotTopicList(browser);
+            const successLogPath = path.resolve('logs/success.log');
+            fs.existsSync(successLogPath) || fs.writeFileSync(successLogPath, JSON.stringify({}), 'utf-8');
+            const file = fs.readFileSync(successLogPath);
+            const successLogTree = JSON.parse(file);
+
+            let KEYWORD;
+            for (let i = 0, length = topicList.length; i < length; i++) {
+                if (successLogTree[topicList[i]] === undefined) {
+                    // TODO 포스팅
+                    KEYWORD = topicList[i];
+                    successLogTree[topicList[i]] = 1;
+                    break;
+                }
+            }
+            fs.writeFileSync(successLogPath, JSON.stringify(successLogTree, null, '\t'), 'utf-8');
+
+            const result = await searchByKeyword(KEYWORD, browser);
+            await closePopup(browser);
+            const html = buildPost(KEYWORD, result.relatedKeywords, result.profile, result.news);
+            fs.writeFileSync(path.join(path.resolve('logs'), `${Date.now()}_${KEYWORD}.html`), html, 'utf-8');
+        });
+        //////////////////
     }, timeout);
 });
 job.start();
