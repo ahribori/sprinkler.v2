@@ -2,7 +2,7 @@ require('dotenv').config();
 import log from '@logger';
 import cron from '@cron';
 
-const job = new cron('0 0 7-9,12-14,19-24 * * * *', () => {
+const job = new cron('0 0 7,8,9,12,13,14,19,21,22,23 * * * *', () => {
     const minutesTimeoutRange = 20;
     const secondTimeoutRange = 60;
     const randomTimeoutMinutes = Math.round(Math.random() * (minutesTimeoutRange - 1)); // 0 ~29
