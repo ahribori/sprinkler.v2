@@ -1,6 +1,7 @@
 import jsdom from 'jsdom';
 import log from '@logger';
 import { run } from '@selenium';
+import { summarize } from '../translate/summary';
 
 const { JSDOM } = jsdom;
 
@@ -122,10 +123,37 @@ export const searchByKeyword = async (keyword, browser) => {
     };
 
     const news = await getNews();
+
+    /**
+     * Summary
+     * @type {string}
+     */
+    let fullNews = '';
+    news.forEach(n => {
+        console.log(n.description);
+        if (n.description) {
+            fullNews += n.description;
+        }
+    });
+    const match1 = fullNews.match(/\[.*]/gi);
+    const match2 = fullNews.match(/\(.*\)/gi);
+    if (match1) {
+        match1.forEach(match => {
+            fullNews = fullNews.replace(match, '');
+        });
+    }
+    if (match2) {
+        match2.forEach(match => {
+            fullNews = fullNews.replace(match, '');
+        });
+    }
+    const summary = await summarize(fullNews, browser);
+
     return {
         relatedKeywords: getRelatedKeywords(),
         profile: getProfile(),
         news,
+        summary,
     }
 };
 

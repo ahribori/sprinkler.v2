@@ -9,8 +9,9 @@ import {
     searchByKeyword,
 } from '../tasks/crawling/daumHotTopic';
 import { buildPost } from '../tasks/post/daumHotTopic';
-import { login } from '../tasks/login/tistory';
 import { closePopup } from '../tasks/util/closePopup';
+import { login } from '../tasks/login/tistory';
+import { postToTistory } from '../tasks/post/post';
 
 const ps = new PermanentSession();
 
@@ -46,9 +47,17 @@ const job = new cron('0 0 7,8,9,12,13,14,19,20,21,22,23 * * *', () => {
             fs.writeFileSync(successLogPath, JSON.stringify(successLogTree, null, '\t'), 'utf-8');
 
             const result = await searchByKeyword(KEYWORD, browser);
+            const post = buildPost(KEYWORD, result.relatedKeywords, result.profile, result.news, result.summary);
+            fs.writeFileSync(path.join(path.resolve('logs'), `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
             await closePopup(browser);
-            const html = buildPost(KEYWORD, result.relatedKeywords, result.profile, result.news);
-            fs.writeFileSync(path.join(path.resolve('logs'), `${Date.now()}_${KEYWORD}.html`), html, 'utf-8');
+            // await login(process.env.tistoryId, process.env.tistoryPw, browser);
+            // await postToTistory(
+            //     'http://realtime-hot-issue-analyze.tistory.com',
+            //     post.title,
+            //     post.contents,
+            //     post.tags,
+            //     browser
+            // )
         });
         //////////////////
     }, timeout);

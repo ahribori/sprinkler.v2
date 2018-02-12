@@ -44,13 +44,14 @@ const makeTitle = (keyword) => {
  * @param profile {html}
  * @param news {array}
  */
-export const buildPost = (keyword, relatedKeywords, profile, news) => {
+export const buildPost = (keyword, relatedKeywords, profile, news, summary) => {
     const templatePath = path.resolve('src/tasks/post/templates');
     let template = fs.readFileSync(path.join(templatePath, 'daum-hot-topic.html'), 'utf-8');
     let relatedKeywordsHTML = '';
     let newsCardListHTML = '';
-    template = template.replace('{{title}}', makeTitle(keyword));
-    template = template.replace('{{contents}}', '컨텐츠에용...');
+    const title = makeTitle(keyword);
+    template = template.replace('{{title}}', title);
+    template = template.replace('{{contents}}', summary.join('\r\n'));
     if (profile) {
         template = template
             .replace('{{thumbnailImage}}', profile.thumbnailImage)
@@ -81,5 +82,9 @@ export const buildPost = (keyword, relatedKeywords, profile, news) => {
     template = template
         .replace('{{relatedKeywords}}', relatedKeywordsHTML)
         .replace('{{news}}', newsCardListHTML);
-    return template;
+    return {
+        title,
+        contents: template,
+        tags: relatedKeywords,
+    };
 };
