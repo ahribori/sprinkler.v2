@@ -1,63 +1,111 @@
 <head>
+	<meta charset="UTF-8">
 	<style>
+		@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
 		.RTHI * {
+			font-family: 'Noto Sans KR', sans-serif;
 			box-sizing: border-box;
 		}
-
 		.RTHI a {
 			text-decoration: none;
-			color: midnightblue;
+			color: #6200EA;
 		}
-
 		.RTHI img {
 			display: block;
 			margin: 0 auto;
 		}
-
+		.RTHI .wrapper {
+			display: block;
+			margin: 0 auto;
+			width: 700px;
+			padding: 15px 0 15px 0;
+		}
 		.RTHI .infoTitle {
 			text-align: center;
 			padding-top: 10px;
 			padding-bottom: 20px;
 		}
-
 		.RTHI .infoContainer {
 			font-size: 0.8rem;
 			word-break: keep-all;
 		}
-
 		.RTHI .infoDetails {
 			text-align: center;
 		}
-
 		.RTHI .infoDetailsWrapper {
 			display: inline-block;
 		}
-
 		.RTHI .tit_main b {
 			font-size: 1.4rem;
 		}
-
 		.RTHI .txt_sub {
 			font-size: 1.1rem;
 		}
-
 		.RTHI dt {
 			font-weight: bold;
 			float: left;
 		}
-
 		.RTHI dd {
 			margin-left: 70px;
 			overflow: hidden;
 			text-align: left;
 		}
+		.RTHI .relatedKeyword {
+			display: inline-block;
+			color: #6200EA;
+			cursor: pointer;
+			border: 1px solid #B388FF;
+			border-radius: 20px;
+			padding: 2px 5px;
+			margin: 5px ;
+			transition: color,background-color,border-color;
+			transition-duration: 0.2s;
+		}
+		.RTHI .relatedKeyword:hover {
+			color: white;
+			background-color: #6200EA;
+			border: 1px solid #6200EA;
+		}
+		.RTHI .newsCard {
+			display: block;
+			margin: 30px 0 30px 0;
+			cursor: pointer;
+			transition: box-shadow 0.3s;
+			box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+			color: #424242;
+		}
+		.RTHI .newsCard:hover {
+			box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 6px, rgba(0, 0, 0, 0.3) 0px 1px 4px;
+		}
+		.RTHI .newsCard_header img {
+			width: 100%;
+			margin: 10px 0 10px 0;
+		}
+		.RTHI .newsCard_footer .newsCard_title {
+			padding: 15px;
+			font-weight: bold;
+			font-size: 1.3rem;
+		}
+		.RTHI .newsCard_footer .newsCard_description {
+			padding: 15px 15px 30px 15px;
+		}
+		@media screen and (max-width: 768px) {
+			.RTHI .wrapper {
+				width: 100%;
+			}
+			.RTHI .newsCard {
+				padding: 10px;
+			}
+		}
 	</style>
 </head>
 <body>
 <div class="RTHI">
+
 	<div class="thumbnailImage">
 		{{thumbnailImage}}
 	</div>
+
 	<div class="infoContainer">
 		<div class="infoTitle">
 			{{infoTitle}}
@@ -67,6 +115,18 @@
 			<div class="infoDetailsWrapper">
 				{{infoDetails}}
 			</div>
+		</div>
+	</div>
+
+	<div class="relatedKeywordContainer">
+		<div class="wrapper">
+			{{relatedKeywords}}
+		</div>
+	</div>
+
+	<div class="newsContainer">
+		<div class="wrapper">
+			{{news}}
 		</div>
 	</div>
 </div>
