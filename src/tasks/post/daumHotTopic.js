@@ -24,9 +24,11 @@ const makeTitle = (keyword) => {
 
     const titleTemplates = [
         '{{keyword}} 왜 실시간 검색어에 떴을까요?',
-        '지금 {{keyword}} 핫한 이유?',
-        '"{{keyword}} 왜 떴을까?"',
-        `헐 지금 ${keyword} 실시간 검색어 떴네요`
+        '{{keyword}} 핫한 이유?',
+        `${keyword} 왜 떴을까?`,
+        `헐 ${keyword} 실검 떴네요`,
+        `${keyword} 실화냐ㅋㅋ`,
+        `${keyword} 실검 장악!`,
     ];
 
     const randomIndex = Math.round(Math.random() * (titleTemplates.length - 1));
@@ -47,6 +49,8 @@ export const buildPost = (keyword, relatedKeywords, profile, news) => {
     let template = fs.readFileSync(path.join(templatePath, 'daum-hot-topic.html'), 'utf-8');
     let relatedKeywordsHTML = '';
     let newsCardListHTML = '';
+    template = template.replace('{{title}}', makeTitle(keyword));
+    template = template.replace('{{contents}}', '컨텐츠에용...');
     if (profile) {
         template = template
             .replace('{{thumbnailImage}}', profile.thumbnailImage)
@@ -60,7 +64,7 @@ export const buildPost = (keyword, relatedKeywords, profile, news) => {
     }
     relatedKeywords.forEach(relatedKeyword => {
         relatedKeywordsHTML +=
-            `<a class="relatedKeyword" href="http://search.daum.net/search?w=tot&q=${relatedKeyword}" target="_blank">${relatedKeyword}</a>`;
+            `<a class="relatedKeyword" href="http://search.daum.net/search?w=tot&q=${relatedKeyword}" target="_blank">#${relatedKeyword}</a>`;
     });
     news.forEach(news => {
         newsCardListHTML +=
