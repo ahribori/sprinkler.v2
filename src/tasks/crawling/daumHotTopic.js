@@ -110,7 +110,8 @@ export const searchByKeyword = async (keyword, browser) => {
                     link: url,
                     title,
                     description: desc,
-                    thumbnail_image: thumb[0],
+                    thumbnail_image: new RegExp(/(http|https)/).test(thumb[0]) ?
+                        thumb[0] : 'http://i1.daumcdn.net/img-media/mobile/meta/news.png',
                 });
             } catch (e) {
                 log.error('[daumHotTopic.getNews]', e);
