@@ -1,16 +1,12 @@
 import log from '@logger';
+import desiredCapabilites from './desiredCapabilities';
 
 const webdriverio = require('webdriverio');
 
 export default {
     run: async (actions, browserType = 'chrome') => {
         const seleniumOptions = {
-            desiredCapabilities: {
-                browserName: browserType,
-                chromeOptions: process.env.NODE_env === 'production' ? {
-                    args: ['headless'],
-                } : {},
-            },
+            desiredCapabilities: desiredCapabilites(),
             protocol: process.env.SELENIUM_PROTOCOL || 'http',
             host: process.env.SELENIUM_HOST || '127.0.0.1',
             port: process.env.SELENIUM_PORT || 4444,
