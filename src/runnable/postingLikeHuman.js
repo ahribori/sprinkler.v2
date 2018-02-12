@@ -39,6 +39,10 @@ const job = new cron('0 0 7,8,9,12,13,14,19,20,21,22,23 * * *', () => {
                     break;
                 }
             }
+            if (!KEYWORD) {
+                log.info('검색어 없음');
+                return;
+            }
             fs.writeFileSync(successLogPath, JSON.stringify(successLogTree, null, '\t'), 'utf-8');
 
             const result = await searchByKeyword(KEYWORD, browser);
