@@ -15,7 +15,7 @@ import { postToTistory } from '../tasks/post/post';
 
 const ps = new PermanentSession();
 
-const job = new cron('0 0 7,9,12,14,19,21,23 * * *', () => {
+const job = new cron('0 0 7,9,12,14,18,19,20,21,22,23 * * *', () => {
     const minutesTimeoutRange = 20;
     const secondTimeoutRange = 60;
     const randomTimeoutMinutes = Math.round(Math.random() * (minutesTimeoutRange - 1)); // 0 ~29
