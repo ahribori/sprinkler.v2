@@ -91,6 +91,7 @@ export const searchByKeyword = async (keyword, browser) => {
      * 뉴스
      * @returns {Promise<Array>}
      */
+    let summaryExist = false;
     const getNews = async () => {
         const newsList = document.querySelectorAll('#newsColl .coll_cont li');
         const news = [];
@@ -107,10 +108,28 @@ export const searchByKeyword = async (keyword, browser) => {
                 const title = await browser.getAttribute('meta[property="og:title"]', 'content');
                 const desc = await browser.getAttribute('meta[property="og:description"]', 'content');
                 const thumb = await browser.getAttribute('meta[property="og:image"]', 'content');
+                const isSummaryExsisting = await browser.isExisting('.layer_summary');
+                let summary = null;
+                if (isSummaryExsisting) {
+                    summaryExist = true;
+                    const summaryResult = await browser.execute(() => {
+                        const texts = document.querySelectorAll('.layer_summary p');
+                        const sum = [];
+                        for (let i = 0, count = texts.length; i < count; i ++) {
+                            const textContent = texts[i].textContent;
+                            if (textContent.trim() !== '') {
+                                sum.push(texts[i].textContent);
+                            }
+                        }
+                        return sum;
+                    });
+                    summary = summaryResult.value;
+                }
                 news.push({
                     link: url,
                     title,
                     description: desc,
+                    summary,
                     thumbnail_image: new RegExp(/(http|https)/).test(thumb[0]) ?
                         thumb[0] : 'http://i1.daumcdn.net/img-media/mobile/meta/news.png',
                 });
@@ -128,27 +147,36 @@ export const searchByKeyword = async (keyword, browser) => {
      * Summary
      * @type {string}
      */
-    let fullNews = '';
-    news.forEach(n => {
-        console.log(n.description);
-        if (n.description) {
-            fullNews += n.description;
-        }
-    });
-    const match1 = fullNews.match(/\[.*]/gi);
-    const match2 = fullNews.match(/\(.*\)/gi);
-    if (match1) {
-        match1.forEach(match => {
-            fullNews = fullNews.replace(match, '');
+    let summary;
+    if (!summaryExist) {
+        // let fullNews = '';
+        // news.forEach(n => {
+        //     console.log(n.description);
+        //     if (n.description) {
+        //         fullNews += n.description;
+        //     }
+        // });
+        // const match1 = fullNews.match(/\[.*]/gi);
+        // const match2 = fullNews.match(/\(.*\)/gi);
+        // if (match1) {
+        //     match1.forEach(match => {
+        //         fullNews = fullNews.replace(match, '');
+        //     });
+        // }
+        // if (match2) {
+        //     match2.forEach(match => {
+        //         fullNews = fullNews.replace(match, '');
+        //     });
+        // }
+        // summary = await summarize(fullNews, browser);
+        summary = ''
+    } else {
+        news.forEach(n => {
+            if (n.summary) {
+               summary = n.summary;
+            }
         });
     }
-    if (match2) {
-        match2.forEach(match => {
-            fullNews = fullNews.replace(match, '');
-        });
-    }
-    const summary = await summarize(fullNews, browser);
-
     return {
         relatedKeywords: getRelatedKeywords(),
         profile: getProfile(),

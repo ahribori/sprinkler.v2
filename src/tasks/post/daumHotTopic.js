@@ -27,8 +27,6 @@ const makeTitle = (keyword) => {
         '{{keyword}} 핫한 이유?',
         `${keyword} 왜 떴을까?`,
         `헐 ${keyword} 실검 떴네요`,
-        `${keyword} 실화냐ㅋㅋ`,
-        `${keyword} 실검 장악!`,
     ];
 
     const randomIndex = Math.round(Math.random() * (titleTemplates.length - 1));
