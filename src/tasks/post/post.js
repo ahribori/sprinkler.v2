@@ -20,5 +20,6 @@ export const postToTistory = async (tistoryUrl, title, contents, tags, browser) 
     }, contents);
     await browser.setValue('#tagInput', tags.join(','));
     await browser.pause(2000);
+    await browser.click('#visibilityOption .btn_tab.btn_public');
     await browser.click('button.btn_comm.btn_save');
 };

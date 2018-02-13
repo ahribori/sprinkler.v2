@@ -15,7 +15,7 @@ import { postToTistory } from '../tasks/post/post';
 
 const ps = new PermanentSession();
 
-const job = new cron('0 0 7,8,9,12,13,14,19,20,21,22,23 * * *', () => {
+const job = new cron('0 0 7,9,12,14,19,21,23 * * *', () => {
     const minutesTimeoutRange = 20;
     const secondTimeoutRange = 60;
     const randomTimeoutMinutes = Math.round(Math.random() * (minutesTimeoutRange - 1)); // 0 ~29
@@ -50,14 +50,14 @@ const job = new cron('0 0 7,8,9,12,13,14,19,20,21,22,23 * * *', () => {
             const post = buildPost(KEYWORD, result.relatedKeywords, result.profile, result.news, result.summary);
             fs.writeFileSync(path.join(path.resolve('logs'), `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
             await closePopup(browser);
-            // await login(process.env.tistoryId, process.env.tistoryPw, browser);
-            // await postToTistory(
-            //     'http://realtime-hot-issue-analyze.tistory.com',
-            //     post.title,
-            //     post.contents,
-            //     post.tags,
-            //     browser
-            // )
+            await login(process.env.tistoryId, process.env.tistoryPw, browser);
+            await postToTistory(
+                'http://realtime-hot-issue-analyze.tistory.com',
+                post.title,
+                post.contents,
+                post.tags,
+                browser
+            )
         });
         //////////////////
     }, timeout);

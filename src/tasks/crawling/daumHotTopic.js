@@ -147,7 +147,7 @@ export const searchByKeyword = async (keyword, browser) => {
      * Summary
      * @type {string}
      */
-    let summary;
+    let summary = [];
     if (!summaryExist) {
         // let fullNews = '';
         // news.forEach(n => {
@@ -169,7 +169,6 @@ export const searchByKeyword = async (keyword, browser) => {
         //     });
         // }
         // summary = await summarize(fullNews, browser);
-        summary = ''
     } else {
         news.forEach(n => {
             if (n.summary) {
