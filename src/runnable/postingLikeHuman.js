@@ -15,7 +15,7 @@ import { postToTistory } from '../tasks/post/post';
 
 const ps = new PermanentSession();
 
-const job = new cron('0 0 7,9,12,14,18,19,20,21,22,23 * * *', () => {
+const job = new cron('0 0 6-23 * * *', () => {
     const minutesTimeoutRange = 20;
     const secondTimeoutRange = 60;
     const randomTimeoutMinutes = Math.round(Math.random() * (minutesTimeoutRange - 1)); // 0 ~29
@@ -24,41 +24,45 @@ const job = new cron('0 0 7,9,12,14,18,19,20,21,22,23 * * *', () => {
     log.info(`${randomTimeoutMinutes}분 ${randomTimeoutSecond}초 후에 실행.`);
     setTimeout(() => {
         //////////////////
-        ps.enqueueTransaction(async (browser) => {
-            const topicList = await getHotTopicList(browser);
-            const successLogPath = path.resolve('logs/success.log');
-            fs.existsSync(successLogPath) || fs.writeFileSync(successLogPath, JSON.stringify({}), 'utf-8');
-            const file = fs.readFileSync(successLogPath);
-            const successLogTree = JSON.parse(file);
+        try {
+            ps.enqueueTransaction(async (browser) => {
+                const topicList = await getHotTopicList(browser);
+                const successLogPath = path.resolve('logs/success.log');
+                fs.existsSync(successLogPath) || fs.writeFileSync(successLogPath, JSON.stringify({}), 'utf-8');
+                const file = fs.readFileSync(successLogPath);
+                const successLogTree = JSON.parse(file);
 
-            let KEYWORD;
-            for (let i = 0, length = topicList.length; i < length; i++) {
-                if (successLogTree[topicList[i]] === undefined) {
-                    // TODO 포스팅
-                    KEYWORD = topicList[i];
-                    successLogTree[topicList[i]] = 1;
-                    break;
+                let KEYWORD;
+                for (let i = 0, length = topicList.length; i < length; i++) {
+                    if (successLogTree[topicList[i]] === undefined) {
+                        // TODO 포스팅
+                        KEYWORD = topicList[i];
+                        successLogTree[topicList[i]] = 1;
+                        break;
+                    }
                 }
-            }
-            if (!KEYWORD) {
-                log.info('검색어 없음');
-                return;
-            }
-            fs.writeFileSync(successLogPath, JSON.stringify(successLogTree, null, '\t'), 'utf-8');
+                if (!KEYWORD) {
+                    log.info('검색어 없음');
+                    return;
+                }
+                fs.writeFileSync(successLogPath, JSON.stringify(successLogTree, null, '\t'), 'utf-8');
 
-            const result = await searchByKeyword(KEYWORD, browser);
-            const post = buildPost(KEYWORD, result.relatedKeywords, result.profile, result.news, result.summary);
-            fs.writeFileSync(path.join(path.resolve('logs'), `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
-            await closePopup(browser);
-            await login(process.env.tistoryId, process.env.tistoryPw, browser);
-            await postToTistory(
-                'http://realtime-hot-issue-analyze.tistory.com',
-                post.title,
-                post.contents,
-                post.tags,
-                browser
-            )
-        });
+                const result = await searchByKeyword(KEYWORD, browser);
+                const post = buildPost(KEYWORD, result.relatedKeywords, result.profile, result.news, result.summary);
+                fs.writeFileSync(path.join(path.resolve('logs'), `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
+                await closePopup(browser);
+                await login(process.env.tistoryId, process.env.tistoryPw, browser);
+                await postToTistory(
+                    'http://realtime-hot-issue-analyze.tistory.com',
+                    post.title,
+                    post.contents,
+                    post.tags,
+                    browser
+                )
+            });
+        } catch (e) {
+            log.error(e);
+        }
         //////////////////
     }, timeout);
 });
