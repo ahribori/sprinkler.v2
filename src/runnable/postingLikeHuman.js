@@ -37,6 +37,7 @@ const job = new cron('0 0 6-23 * * *', () => {
                     if (successLogTree[topicList[i]] === undefined) {
                         // TODO 포스팅
                         KEYWORD = topicList[i];
+                        log.info(`검색어 "${KEYWORD}"로 포스팅을 시작합니다`);
                         successLogTree[topicList[i]] = 1;
                         break;
                     }
