@@ -41,7 +41,11 @@ export default class PermanentSession {
                 log.info('[permanentSession.pending]', `Dequeue transaction (queue=${this.transactionQueue.length})`);
                 if (typeof transaction === 'function') {
                     log.info('[permanentSession.pending]', 'Execute transaction');
-                    await transaction(this.browser);
+                    try {
+                        await transaction(this.browser);
+                    } catch (e) {
+                        log.error(e);
+                    }
                 } else {
                     log.warn('[permanentSession.pending]', 'transaction is not a function');
                 }
