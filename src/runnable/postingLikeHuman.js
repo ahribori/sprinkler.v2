@@ -16,10 +16,10 @@ import { postToTistory } from '../tasks/post/post';
 const ps = new PermanentSession();
 
 const job = new cron('0 0 6-23 * * *', () => {
-    const minutesTimeoutRange = 20;
+    const minutesTimeoutRange = 40;
     const secondTimeoutRange = 60;
-    const randomTimeoutMinutes = Math.round(Math.random() * (minutesTimeoutRange - 1)); // 0 ~29
-    const randomTimeoutSecond = Math.round(Math.random() * (secondTimeoutRange - 1)); // 0 ~ 59
+    const randomTimeoutMinutes = Math.round(Math.random() * (minutesTimeoutRange - 1));
+    const randomTimeoutSecond = Math.round(Math.random() * (secondTimeoutRange - 1));
     const timeout = ((randomTimeoutMinutes * 60) + (randomTimeoutSecond)) * 1000;
     log.info(`${randomTimeoutMinutes}분 ${randomTimeoutSecond}초 후에 실행.`);
     setTimeout(() => {
