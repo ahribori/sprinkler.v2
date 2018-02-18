@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Prompt from 'prompt-checkbox';
+import PermanentSession from '@selenium/permanentSession';
 
 const filePathList = fs.readdirSync(__dirname);
 const filter = process.env.NODE_ENV === 'production' ? new RegExp(/(.js)$/) : new RegExp(/(.dev.js)$/);
