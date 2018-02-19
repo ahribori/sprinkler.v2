@@ -45,6 +45,7 @@
 		"fkill": "^5.2.0",
 		"heapdump": "^0.3.9",
 		"jsdom": "^11.5.1",
+		"node-telegram-bot-api": "^0.30.0",
 		"process-list": "^1.2.2",
 		"prompt-checkbox": "^2.2.0",
 		"rimraf": "^2.6.2",
