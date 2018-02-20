@@ -12,8 +12,10 @@ import { buildPost } from '../tasks/post/daumHotTopic';
 import { closePopup } from '../tasks/util/closePopup';
 import { login } from '../tasks/login/tistory';
 import { postToTistory } from '../tasks/post/post';
+import TelegramBot from '../telegram';
 
 const ps = new PermanentSession();
+const bot = new TelegramBot();
 
 const job = new cron('0 0 6-23 * * *', () => {
     const minutesTimeoutRange = 40;
@@ -59,7 +61,8 @@ const job = new cron('0 0 6-23 * * *', () => {
                     post.contents,
                     post.tags,
                     browser
-                )
+                );
+                bot.sendMessage(`검색어 "${KEYWORD}"로 포스팅을 마쳤습니다.`);
             });
         } catch (e) {
             log.error(e);
