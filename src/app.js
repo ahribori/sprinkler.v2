@@ -1,7 +1,7 @@
 import kill from 'fkill';
 import seleniumStandalone from '@selenium/seleniumStandalone';
 
-const { snapshot } = require('process-list');
+const psList = require('ps-list');
 
 seleniumStandalone.start(() => {
     require('./modules');
@@ -11,7 +11,7 @@ process.on('SIGINT', async () => {
     try {
         const killList = [];
         const chromeRegex = new RegExp(/chromedriver/);
-        const processes = await snapshot('pid', 'name');
+        const processes = await psList();
         processes.forEach(process => {
             chromeRegex.test(process.name) && killList.push(process.pid);
         });
