@@ -66,8 +66,10 @@ export const searchByKeyword = async (keyword, browser) => {
         if (!profile) {
             return null;
         }
-
-        profile.querySelector('a.thumb img').removeAttribute('onerror');
+        const $thumbImg = profile.querySelector('a.thumb img');
+        if ($thumbImg) {
+            $thumbImg.removeAttribute('onerror');
+        }
         const anchors = profile.querySelectorAll('a');
         anchors.forEach(a => {
             a.removeAttribute('onclick');
