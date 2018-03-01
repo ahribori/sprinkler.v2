@@ -51,7 +51,9 @@ const job = new cron('0 0,30 6-23 * * *', () => {
 
                 const result = await searchByKeyword(KEYWORD, browser);
                 const post = buildPost(KEYWORD, result.relatedKeywords, result.profile, result.news, result.summary);
-                fs.writeFileSync(path.join(path.resolve('logs'), `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
+                const postDirPath = path.resolve('logs/post');
+                fs.existsSync(postDirPath) || fs.mkdirSync(postDirPath);
+                fs.writeFileSync(path.join(postDirPath, `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
                 await closePopup(browser);
                 await login(process.env.tistoryId, process.env.tistoryPw, browser);
                 await postToTistory(
