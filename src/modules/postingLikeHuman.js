@@ -17,7 +17,7 @@ import TelegramBot from '../telegram';
 const ps = new PermanentSession();
 const bot = new TelegramBot();
 
-const job = new cron('0 0 6-23 * * *', () => {
+const job = new cron('0 0,30 6-23 * * *', () => {
     const minutesTimeoutRange = 40;
     const secondTimeoutRange = 60;
     const randomTimeoutMinutes = Math.round(Math.random() * (minutesTimeoutRange - 1));
