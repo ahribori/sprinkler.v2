@@ -9,6 +9,7 @@ export default class PermanentSession {
     constructor(browserType = 'chrome') {
         if (!instance) {
             instance = this;
+            this.killInterval = 1000 * 60 * 60 * 24; // 24시간 마다 세션 초기화
             this.transactionQueue = [];
             const seleniumOptions = {
                 desiredCapabilities: desiredCapabilites(),
@@ -26,13 +27,26 @@ export default class PermanentSession {
 
     init = async () => {
         log.info('[permanentSession.init] Initialize browser');
+        this.initializedTime = new Date().getTime();
+        console.log(this.initializedTime);
         await this.browser.init();
         await this.pending();
         log.info('[permanentSession.init]', 'Start pending');
     };
 
+    kill = async () => {
+        log.info('[permanentSession.kill] Kill browser');
+        await this.browser.end();
+    };
+
     pending = () => {
         setTimeout(async () => {
+            const currentTime = new Date().getTime();
+            if (currentTime - this.initializedTime > this.killInterval) {
+                await this.kill();
+                await this.init();
+                return;
+            }
             if (this.transactionQueue.length === 0) {
                 this.pending();
             } else {
