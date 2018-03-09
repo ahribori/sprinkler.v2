@@ -18,9 +18,11 @@ export const postToTistory = async (tistoryUrl, title, contents, tags, browser) 
     await browser.execute((text) => {
         document.querySelector('#tx_canvas_source').value = text;
     }, contents);
-    await browser.pause(2000);
+    await browser.pause(3000);
     await browser.setValue('#tagInput', tags.join(','));
-    await browser.pause(2000);
+    await browser.pause(3000);
     await browser.click('#visibilityOption .btn_tab.btn_public');
+    await browser.pause(3000);
     await browser.click('button.btn_comm.btn_save');
+    await browser.pause(5000);
 };
