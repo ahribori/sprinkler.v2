@@ -63,7 +63,7 @@ const job = new cron('0 0,30 6-23 * * *', () => {
                     post.tags,
                     browser
                 );
-                bot.sendMessage(`검색어 "${KEYWORD}"로 포스팅을 마쳤습니다.`);
+                // bot.sendMessage(`검색어 "${KEYWORD}"로 포스팅을 마쳤습니다.`);
             });
         } catch (e) {
             log.error(e);
