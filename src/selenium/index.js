@@ -1,3 +1,4 @@
+import './polyfill';
 import webdriverio from './webdriverio';
 
 const run = webdriverio.run;
