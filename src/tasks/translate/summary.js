@@ -1,5 +1,4 @@
 import log from '@logger';
-import { run } from '@selenium';
 
 export const summarize = async (text, browser) => {
     if (!text || text === undefined || text === null || text === '') {
@@ -18,9 +17,3 @@ export const summarize = async (text, browser) => {
     log.info('[summary.summarize]', `Translation result: ${result}`);
     return result;
 };
-
-export default {
-    runSummarize: async (text) => await run(async (browser) => {
-        return await summarize(text, browser);
-    }),
-}

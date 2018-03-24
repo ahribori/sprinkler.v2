@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import log from '@logger';
 import cron from '@cron';
-import webdriverio from '@selenium/webdriverio';
+import { run } from '@selenium';
 import {
     getHotTopicList,
     searchByKeyword,
@@ -26,7 +26,7 @@ const job = new cron('0 0,30 6-23 * * *', () => {
     setTimeout(() => {
         //////////////////
         try {
-            webdriverio.run(async (browser) => {
+            run(async (browser) => {
                 const topicList = await getHotTopicList(browser);
                 const successLogPath = path.resolve('logs/success.log');
                 fs.existsSync(successLogPath) || fs.writeFileSync(successLogPath, JSON.stringify({}), 'utf-8');
@@ -53,7 +53,7 @@ const job = new cron('0 0,30 6-23 * * *', () => {
                 const post = buildPost(KEYWORD, result.relatedKeywords, result.profile, result.news, result.summary);
                 const postDirPath = path.resolve('logs/post');
                 fs.existsSync(postDirPath) || fs.mkdirSync(postDirPath);
-                fs.writeFileSync(path.join(postDirPath, `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
+                // fs.writeFileSync(path.join(postDirPath, `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
                 await closePopup(browser);
                 await login(process.env.tistoryId, process.env.tistoryPw, browser);
                 await postToTistory(

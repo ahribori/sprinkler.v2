@@ -1,5 +1,4 @@
 import log from '@logger';
-import { run } from '@selenium';
 
 /**
  * 구글 번역
@@ -41,18 +40,3 @@ export const translateToJapanese = async (text, browser) => {
 export const translateToChinese = async (text, browser) => {
     return await translate(text, 'zh-CN', browser);
 };
-
-export default {
-    runTranslateToKorean: async (text) => await run(async (browser) => {
-        return await translateToKorean(text, browser);
-    }),
-    runTranslateToEnglish: async (text) => await run(async (browser) => {
-        return await translateToEnglish(text, browser);
-    }),
-    runTranslateToJapanese: async (text) => await run(async (browser) => {
-        return await translateToJapanese(text, browser);
-    }),
-    runTranslateToChinese: async (text) => await run(async (browser) => {
-        return await translateToChinese(text, browser);
-    }),
-}

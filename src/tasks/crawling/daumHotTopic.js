@@ -1,6 +1,5 @@
 import jsdom from 'jsdom';
 import log from '@logger';
-import { run } from '@selenium';
 import { summarize } from '../translate/summary';
 
 const { JSDOM } = jsdom;
@@ -185,16 +184,3 @@ export const searchByKeyword = async (keyword, browser) => {
         summary,
     }
 };
-
-export default {
-    run: () => {
-        /**
-         * 작업들을 순차적으로 실행
-         */
-        run(async (browser) => {
-            const hotTopicList = await getHotTopicList(browser);
-            const searchResult = await searchByKeyword(hotTopicList[0], browser);
-            console.log(searchResult)
-        });
-    }
-}

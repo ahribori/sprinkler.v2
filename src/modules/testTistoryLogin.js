@@ -1,8 +1,8 @@
 require('dotenv').config();
-import webdriverio from '@selenium/webdriverio';
+import { run } from '@selenium';
 import { login } from '../tasks/login/tistory';
 
-webdriverio.run(async (browser) => {
+run(async (browser) => {
     await login(process.env.tistoryId, process.env.tistoryPw, browser);
     await browser.pause(10000);
 });

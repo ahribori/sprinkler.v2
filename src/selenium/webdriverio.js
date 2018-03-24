@@ -1,15 +1,37 @@
 import log from '@logger';
-import desiredCapabilites from './desiredCapabilities';
 
 const webdriverio = require('webdriverio');
 
+const desiredCapabilities = (browserType) => {
+    if (typeof browserType !== 'string') {
+        throw new Error('browserType is not a string');
+    }
+    switch (browserType.toUpperCase()) {
+        case 'CHROME': {
+            return {
+                browserName: 'chrome',
+                chromeOptions: process.env.NODE_env === 'production' ? {
+                    args: ['headless'],
+                } : {
+                    args: [
+                        '--window-size=800,600',
+                    ],
+                },
+            }
+        }
+        default: {
+            // TODO
+        }
+    }
+};
+
 export default {
-    run: async (actions, browserType = 'chrome') => {
+    run: async (actions, options = {}) => {
         const seleniumOptions = {
-            desiredCapabilities: desiredCapabilites(),
-            protocol: process.env.SELENIUM_PROTOCOL || 'http',
-            host: process.env.SELENIUM_HOST || '127.0.0.1',
-            port: process.env.SELENIUM_PORT || 4444,
+            desiredCapabilities: desiredCapabilities(options.browserType || 'chrome'),
+            protocol: process.env.SELENIUM_PROTOCOL || options.protocol || 'http',
+            host: process.env.SELENIUM_HOST || options.host || '127.0.0.1',
+            port: process.env.SELENIUM_PORT || options.port || '4444',
         };
         try {
             log.info('============ RUN ============');

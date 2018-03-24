@@ -1,5 +1,4 @@
 import log from '@logger';
-import { run } from '@selenium';
 
 export const login = async (id, pw, browser) => {
     log.info('[tistory.login]', 'Start login process');
@@ -18,9 +17,3 @@ export const login = async (id, pw, browser) => {
     log.info('[tistory.login]', `Login result: ${loginResult}`);
     return loginResult;
 };
-
-export default {
-    runLogin: async (id, pw) => await run(async (browser) => {
-        return login(id, pw, browser);
-    }),
-}

@@ -1,6 +1,5 @@
 import jsdom from 'jsdom';
 import log from '@logger';
-import { run } from '@selenium';
 
 const { JSDOM } = jsdom;
 
