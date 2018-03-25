@@ -33,15 +33,16 @@ export default {
             host: process.env.SELENIUM_HOST || options.host || '127.0.0.1',
             port: process.env.SELENIUM_PORT || options.port || '4444',
         };
+        log.info('============ RUN ============');
+        const browser = webdriverio.remote(seleniumOptions);
         try {
-            log.info('============ RUN ============');
-            const browser = webdriverio.remote(seleniumOptions);
             await browser.init();
             const results = await actions(browser);
             await browser.end();
             log.info('============ DONE ============');
             return results;
         } catch (e) {
+            await browser.end();
             log.error(e);
         }
     }
