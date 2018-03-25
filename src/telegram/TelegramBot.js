@@ -23,9 +23,9 @@ export default class TelegramBot {
             this.initialized = false;
             this.chatList = [];
             this.bot = new Bot(token, { polling: false });
-            this.chatBot = new Bot(token, { polling: true });
+            // this.chatBot = new Bot(token, { polling: true });
 
-            this.chatBot.on('message', this.listenMessage);
+            // this.chatBot.on('message', this.listenMessage);
 
             let stackCount = 0;
             const checkStackCount = () => {

@@ -1,9 +1,5 @@
 import log from '@logger';
 
-if (process.env.NODE_ENV === 'production') {
-    require('./polyfill');
-}
-
 const webdriverio = require('webdriverio');
 
 const desiredCapabilities = (browserType) => {

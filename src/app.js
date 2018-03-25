@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV === 'production') {
+    require('./selenium/polyfill');
+}
+
 import kill from 'fkill';
 
 const psList = require('ps-list');
