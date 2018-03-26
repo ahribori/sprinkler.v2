@@ -1,4 +1,4 @@
-require('dotenv').config();
+import config from '@config';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -6,7 +6,7 @@ import log from '@logger';
 import api from './api';
 
 const app = express();
-const port = process.env.PORT || 8989;
+const port = config.server.port || 8989;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

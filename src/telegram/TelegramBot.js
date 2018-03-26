@@ -1,13 +1,13 @@
-require('dotenv').config();
+import config from '@config';
 import fs from 'fs';
 import path from 'path';
 import log from '@logger';
 
 const Bot = require('node-telegram-bot-api');
 
-const token = process.env.telegramBotToken || 'YOUR_TELEGRAM_BOT_TOKEN';
-const channels = process.env.telegramChannels || '';
-const telegramId = process.env.telegramId;
+const token = config.telegram.telegramBotToken || 'YOUR_TELEGRAM_BOT_TOKEN';
+const channels = config.telegram.telegramChannels || '';
+const telegramId = config.telegram.telegramId;
 
 const channelTablePath = path.resolve('logs/channels.json');
 fs.existsSync(channelTablePath) || fs.writeFileSync(channelTablePath, JSON.stringify({}), 'utf-8');

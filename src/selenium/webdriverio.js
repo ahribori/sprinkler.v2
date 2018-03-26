@@ -29,9 +29,9 @@ export default {
     run: async (actions, options = {}) => {
         const seleniumOptions = {
             desiredCapabilities: desiredCapabilities(options.browserType || 'chrome'),
-            protocol: process.env.SELENIUM_PROTOCOL || options.protocol || 'http',
-            host: process.env.SELENIUM_HOST || options.host || '127.0.0.1',
-            port: process.env.SELENIUM_PORT || options.port || '4444',
+            protocol: options.protocol || 'http',
+            host: options.host || '127.0.0.1',
+            port: options.port || '4444',
         };
         log.info('============ RUN ============');
         const browser = webdriverio.remote(seleniumOptions);

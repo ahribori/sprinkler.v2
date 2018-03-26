@@ -1,4 +1,4 @@
-require('dotenv').config();
+import config from '@config';
 import fs from 'fs';
 import path from 'path';
 import log from '@logger';
@@ -55,7 +55,7 @@ const job = new cron('0 0,30 6-23 * * *', () => {
                 fs.existsSync(postDirPath) || fs.mkdirSync(postDirPath);
                 // fs.writeFileSync(path.join(postDirPath, `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
                 await closePopup(browser);
-                await login(process.env.tistoryId, process.env.tistoryPw, browser);
+                await login(config.tistory.rthi.id, config.tistory.rthi.pw, browser);
                 await postToTistory(
                     'http://realtime-hot-issue-analyze.tistory.com',
                     post.title,

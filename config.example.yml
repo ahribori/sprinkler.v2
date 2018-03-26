@@ -1,0 +1,19 @@
+# api server configuration
+server:
+  port:
+  secret:
+
+# tistory
+tistory:
+  rthi:
+    id:
+    pw:
+  almond:
+    id:
+    pw:
+
+# telegram
+telegram:
+  telegramBotToken:
+  telegramChannels:
+  telegramId:
