@@ -35,7 +35,7 @@ export default class TelegramBot {
                 }
             };
 
-            channels.split(',').forEach(channel => {
+            channels.toString().split(',').forEach(channel => {
                 if (/^@/.test(channel)) {
                     if (!channelTable[channel]) {
                         stackCount++;
