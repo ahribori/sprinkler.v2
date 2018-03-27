@@ -42,9 +42,54 @@ const makeTitle = (keyword) => {
  * @param profile {html}
  * @param news {array}
  */
-export const buildPost = (keyword, relatedKeywords, profile, news, summary) => {
+export const buildRTHIPost = (keyword, relatedKeywords, profile, news, summary) => {
     const templatePath = path.resolve('src/tasks/post/templates');
-    let template = fs.readFileSync(path.join(templatePath, 'daum-hot-topic.html'), 'utf-8');
+    let template = fs.readFileSync(path.join(templatePath, 'real-time-hot-issue.html'), 'utf-8');
+    let relatedKeywordsHTML = '';
+    let newsCardListHTML = '';
+    const title = makeTitle(keyword);
+    template = template.replace('{{title}}', title);
+    template = template.replace('{{contents}}', summary.join('\r\n'));
+    if (profile) {
+        template = template
+            .replace('{{thumbnailImage}}', profile.thumbnailImage)
+            .replace('{{infoTitle}}', profile.infoTitle)
+            .replace('{{infoDetails}}', profile.infoDetails)
+    } else {
+        template = template
+            .replace('{{thumbnailImage}}', '')
+            .replace('{{infoTitle}}', '')
+            .replace('{{infoDetails}}', '')
+    }
+    relatedKeywords.forEach(relatedKeyword => {
+        relatedKeywordsHTML +=
+            `<a class="relatedKeyword" href="http://search.daum.net/search?w=tot&q=${relatedKeyword}" target="_blank">#${relatedKeyword}</a>`;
+    });
+    news.forEach(news => {
+        newsCardListHTML +=
+            `<a class="newsCard" href="${news.link}" target="_blank">
+    <div class="newsCard_header">
+        <img src="${news.thumbnail_image}" alt="${news.title}">
+    </div>
+    <div class="newsCard_footer">
+        <div class="newsCard_title">${news.title}</div>
+        <div class="newsCard_description">${news.description}...</div>
+    </div>    
+</a>`;
+    });
+    template = template
+        .replace('{{relatedKeywords}}', relatedKeywordsHTML)
+        .replace('{{news}}', newsCardListHTML);
+    return {
+        title,
+        contents: template,
+        tags: relatedKeywords,
+    };
+};
+
+export const buildAlmondBongBongPost = (keyword, relatedKeywords, profile, news, summary) => {
+    const templatePath = path.resolve('src/tasks/post/templates');
+    let template = fs.readFileSync(path.join(templatePath, 'almond-bongbong.html'), 'utf-8');
     let relatedKeywordsHTML = '';
     let newsCardListHTML = '';
     const title = makeTitle(keyword);

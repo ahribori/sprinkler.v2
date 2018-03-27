@@ -6,11 +6,16 @@ server:
 # tistory
 tistory:
   rthi:
+    domain:
     id:
     pw:
-  almond:
+  almondbongbong:
+    domain:
     id:
     pw:
+    seleniumProtocol:
+    seleniumHost:
+    seleniumPort:
 
 # telegram
 telegram:

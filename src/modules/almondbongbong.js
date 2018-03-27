@@ -8,7 +8,7 @@ import {
     getHotTopicList,
     searchByKeyword,
 } from '../tasks/crawling/daumHotTopic';
-import { buildRTHIPost } from '../tasks/post/daumHotTopic';
+import { buildAlmondBongBongPost } from '../tasks/post/daumHotTopic';
 import { closePopup } from '../tasks/util/closePopup';
 import { login } from '../tasks/login/tistory';
 import { postToTistory } from '../tasks/post/post';
@@ -22,11 +22,11 @@ const job = new cron('0 0,30 6-23 * * *', () => {
     const randomTimeoutMinutes = Math.round(Math.random() * (minutesTimeoutRange - 1));
     const randomTimeoutSecond = Math.round(Math.random() * (secondTimeoutRange - 1));
     const timeout = ((randomTimeoutMinutes * 60) + (randomTimeoutSecond)) * 1000;
-    log.info(`RTHI 포스팅 ${randomTimeoutMinutes}분 ${randomTimeoutSecond}초 후에 실행.`);
+    log.info(`아몬드봉봉 포스팅 ${randomTimeoutMinutes}분 ${randomTimeoutSecond}초 후에 실행.`);
     setTimeout(() => {
         //////////////////
         try {
-            const { rthi } = config.tistory;
+            const { almondbongbong } = config.tistory;
             run(async (browser) => {
                 const topicList = await getHotTopicList(browser);
                 const successLogPath = path.resolve('logs/success.log');
@@ -51,20 +51,24 @@ const job = new cron('0 0,30 6-23 * * *', () => {
                 fs.writeFileSync(successLogPath, JSON.stringify(successLogTree, null, '\t'), 'utf-8');
 
                 const result = await searchByKeyword(KEYWORD, browser);
-                const post = buildRTHIPost(KEYWORD, result.relatedKeywords, result.profile, result.news, result.summary);
+                const post = buildAlmondBongBongPost(KEYWORD, result.relatedKeywords, result.profile, result.news, result.summary);
                 const postDirPath = path.resolve('logs/post');
                 fs.existsSync(postDirPath) || fs.mkdirSync(postDirPath);
                 // fs.writeFileSync(path.join(postDirPath, `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
                 await closePopup(browser);
-                await login(rthi.id, rthi.pw, browser);
+                await login(almondbongbong.id, almondbongbong.pw, browser);
                 await postToTistory(
-                    rthi.domain,
+                    almondbongbong.domain,
                     post.title,
                     post.contents,
                     post.tags,
                     browser
                 );
                 // bot.sendMessage(`검색어 "${KEYWORD}"로 포스팅을 마쳤습니다.`);
+            }, {
+                protocol: almondbongbong.seleniumProtocol,
+                host: almondbongbong.seleniumHost,
+                port: almondbongbong.seleniumPort,
             });
         } catch (e) {
             log.error(e);
