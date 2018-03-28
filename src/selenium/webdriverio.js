@@ -2,7 +2,7 @@ import log from '@logger';
 
 const webdriverio = require('webdriverio');
 
-const desiredCapabilities = (browserType) => {
+const desiredCapabilities = (browserType, headless) => {
     if (typeof browserType !== 'string') {
         throw new Error('browserType is not a string');
     }
@@ -14,7 +14,7 @@ const desiredCapabilities = (browserType) => {
                     args: ['headless'],
                 } : {
                     args: [
-                        '--window-size=800,600',
+                        headless ? 'headless' : '--window-size=800,600',
                     ],
                 },
             }
@@ -28,7 +28,7 @@ const desiredCapabilities = (browserType) => {
 export default {
     run: async (actions, options = {}) => {
         const seleniumOptions = {
-            desiredCapabilities: desiredCapabilities(options.browserType || 'chrome'),
+            desiredCapabilities: desiredCapabilities(options.browserType || 'chrome', options.headless),
             protocol: options.protocol || 'http',
             host: options.host || '127.0.0.1',
             port: options.port || '4444',
