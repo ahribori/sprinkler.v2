@@ -28,6 +28,7 @@ const job = new cron('0 0 6-23 * * *', () => {
         try {
             const { almondbongbong } = config.tistory;
             run(async (browser) => {
+                log.info(`아몬드봉봉 포스팅 시작`);
                 const topicList = await getHotTopicList(browser);
                 const successLogPath = path.resolve('logs/success.log');
                 fs.existsSync(successLogPath) || fs.writeFileSync(successLogPath, JSON.stringify({}), 'utf-8');

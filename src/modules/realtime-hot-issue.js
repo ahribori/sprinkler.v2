@@ -28,6 +28,7 @@ const job = new cron('0 0,30 6-23 * * *', () => {
         try {
             const { rthi } = config.tistory;
             run(async (browser) => {
+                log.info(`RTHI 포스팅 시작`);
                 const topicList = await getHotTopicList(browser);
                 const successLogPath = path.resolve('logs/success.log');
                 fs.existsSync(successLogPath) || fs.writeFileSync(successLogPath, JSON.stringify({}), 'utf-8');

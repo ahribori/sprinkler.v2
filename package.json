@@ -44,6 +44,7 @@
 		"fkill": "^5.3.0",
 		"js-yaml": "^3.11.0",
 		"jsdom": "^11.6.2",
+		"moment": "^2.21.0",
 		"node-telegram-bot-api": "^0.30.0",
 		"prompt-checkbox": "^2.2.0",
 		"ps-list": "^4.0.0",
