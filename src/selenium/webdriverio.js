@@ -43,8 +43,8 @@ export default {
             return results;
         } catch (e) {
             log.info('############### Error ###############');
-            await browser.end();
             log.error(e);
+            await browser.end();
             log.info('============ DONE WITH ERROR ============');
         }
     }
