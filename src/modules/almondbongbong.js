@@ -24,57 +24,51 @@ const job = new cron('0 0,30 6-23 * * *', () => {
     const timeout = ((randomTimeoutMinutes * 60) + (randomTimeoutSecond)) * 1000;
     log.info(`아몬드봉봉 포스팅 ${randomTimeoutMinutes}분 ${randomTimeoutSecond}초 후에 실행.`);
     setTimeout(() => {
-        //////////////////
-        try {
-            const { almondbongbong } = config.tistory;
-            run(async (browser) => {
-                log.info(`아몬드봉봉 포스팅 시작`);
-                const topicList = await getHotTopicList(browser);
-                const successLogPath = path.resolve('logs/success.log');
-                fs.existsSync(successLogPath) || fs.writeFileSync(successLogPath, JSON.stringify({}), 'utf-8');
-                const file = fs.readFileSync(successLogPath);
-                const successLogTree = JSON.parse(file);
+        const { almondbongbong } = config.tistory;
+        run(async (browser) => {
+            log.info(`아몬드봉봉 포스팅 시작`);
+            const topicList = await getHotTopicList(browser);
+            const successLogPath = path.resolve('logs/success.log');
+            fs.existsSync(successLogPath) || fs.writeFileSync(successLogPath, JSON.stringify({}), 'utf-8');
+            const file = fs.readFileSync(successLogPath);
+            const successLogTree = JSON.parse(file);
 
-                let KEYWORD;
-                for (let i = 0, length = topicList.length; i < length; i++) {
-                    if (successLogTree[topicList[i]] === undefined) {
-                        // TODO 포스팅
-                        KEYWORD = topicList[i];
-                        log.info(`검색어 "${KEYWORD}"로 포스팅을 시작합니다`);
-                        successLogTree[topicList[i]] = 1;
-                        break;
-                    }
+            let KEYWORD;
+            for (let i = 0, length = topicList.length; i < length; i++) {
+                if (successLogTree[topicList[i]] === undefined) {
+                    // TODO 포스팅
+                    KEYWORD = topicList[i];
+                    log.info(`검색어 "${KEYWORD}"로 포스팅을 시작합니다`);
+                    successLogTree[topicList[i]] = 1;
+                    break;
                 }
-                if (!KEYWORD) {
-                    log.info('검색어 없음');
-                    return;
-                }
-                fs.writeFileSync(successLogPath, JSON.stringify(successLogTree, null, '\t'), 'utf-8');
+            }
+            if (!KEYWORD) {
+                log.info('검색어 없음');
+                return;
+            }
+            fs.writeFileSync(successLogPath, JSON.stringify(successLogTree, null, '\t'), 'utf-8');
 
-                const result = await searchByKeyword(KEYWORD, browser);
-                const post = buildAlmondBongBongPost(KEYWORD, result.relatedKeywords, result.profile, result.news, result.summary);
-                const postDirPath = path.resolve('logs/post');
-                fs.existsSync(postDirPath) || fs.mkdirSync(postDirPath);
-                // fs.writeFileSync(path.join(postDirPath, `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
-                await closePopup(browser);
-                await login(almondbongbong.id, almondbongbong.pw, browser);
-                await postToTistory(
-                    almondbongbong.domain,
-                    post.title,
-                    post.contents,
-                    post.tags,
-                    browser
-                );
-                // bot.sendMessage(`검색어 "${KEYWORD}"로 포스팅을 마쳤습니다.`);
-            }, {
-                protocol: almondbongbong.seleniumProtocol,
-                host: almondbongbong.seleniumHost,
-                port: almondbongbong.seleniumPort,
-            });
-        } catch (e) {
-            log.error(e);
-        }
-        //////////////////
+            const result = await searchByKeyword(KEYWORD, browser);
+            const post = buildAlmondBongBongPost(KEYWORD, result.relatedKeywords, result.profile, result.news, result.summary);
+            const postDirPath = path.resolve('logs/post');
+            fs.existsSync(postDirPath) || fs.mkdirSync(postDirPath);
+            // fs.writeFileSync(path.join(postDirPath, `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
+            await closePopup(browser);
+            await login(almondbongbong.id, almondbongbong.pw, browser);
+            await postToTistory(
+                almondbongbong.domain,
+                post.title,
+                post.contents,
+                post.tags,
+                browser
+            );
+            // bot.sendMessage(`검색어 "${KEYWORD}"로 포스팅을 마쳤습니다.`);
+        }, {
+            protocol: almondbongbong.seleniumProtocol,
+            host: almondbongbong.seleniumHost,
+            port: almondbongbong.seleniumPort,
+        });
     }, timeout);
 });
 job.start();

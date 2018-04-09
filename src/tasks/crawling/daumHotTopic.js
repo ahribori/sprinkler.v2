@@ -36,7 +36,9 @@ export const searchByKeyword = async (keyword, browser) => {
         log.warn('[daumHotTopic.searchByKeyword]', '(!keyword || keyword === undefined || keyword === null || keyword === \'\')');
         return null;
     }
+    log.info('[daumHotTopic.searchByKeyword]', `navigate http://search.daum.net/search?w=tot&q=${keyword}`);
     await browser.url(`http://search.daum.net/search?w=tot&q=${keyword}`);
+    log.info('[daumHotTopic.searchByKeyword]', `get html of #cMain`);
     const html = await browser.getHTML('#cMain');
     const dom = new JSDOM(html);
     const document = dom.window.document;
@@ -74,12 +76,17 @@ export const searchByKeyword = async (keyword, browser) => {
             a.removeAttribute('onclick');
         });
 
+        if (!profile.querySelector('a.thumb') || !profile.querySelector('.info_tit')) {
+            return null;
+        }
         const thumbnailImage = profile.querySelector('a.thumb').innerHTML;
         const infoTitle = profile.querySelector('.info_tit').innerHTML;
         const $infoDetails = profile.querySelectorAll('dl.dl_comm');
         let infoDetails = '';
         for (let i = 0, length = $infoDetails.length; i < length; i++) {
-            infoDetails += $infoDetails[i].innerHTML;
+            if ($infoDetails[i]) {
+                infoDetails += $infoDetails[i].innerHTML;
+            }
         }
         return {
             thumbnailImage,

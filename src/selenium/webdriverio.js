@@ -44,7 +44,11 @@ export default {
         } catch (e) {
             log.info('############### Error ###############');
             log.error(e);
-            await browser.end();
+            try {
+                await browser.end();
+            } catch (e) {
+                log.error('[webdriverio.browser.end]', e);
+            }
             log.info('============ DONE WITH ERROR ============');
         }
     }
