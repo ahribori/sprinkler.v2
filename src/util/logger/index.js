@@ -24,7 +24,6 @@ const logger = new (winston.Logger)({
             json: false,
             datePattern: 'yyyy-MM-dd.',
             prepend: true,
-            zippedArchive: true,
             maxDays: 7,
             localTime: true,
             level: 'info',
