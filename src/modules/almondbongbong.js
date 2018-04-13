@@ -6,6 +6,8 @@ import cron from '@cron';
 import { run } from '@selenium';
 import {
     getHotTopicList,
+} from '../tasks/crawling/naverHotTopic';
+import {
     searchByKeyword,
 } from '../tasks/crawling/daumHotTopic';
 import { buildAlmondBongBongPost } from '../tasks/post/daumHotTopic';
@@ -22,11 +24,11 @@ const job = new cron('0 0,30 6-23 * * *', () => {
     const randomTimeoutMinutes = Math.round(Math.random() * (minutesTimeoutRange - 1));
     const randomTimeoutSecond = Math.round(Math.random() * (secondTimeoutRange - 1));
     const timeout = ((randomTimeoutMinutes * 60) + (randomTimeoutSecond)) * 1000;
-    log.info(`아몬드봉봉 포스팅 ${randomTimeoutMinutes}분 ${randomTimeoutSecond}초 후에 실행.`);
+    log.info('[almondbongbong]', `${randomTimeoutMinutes}분 ${randomTimeoutSecond}초 후에 실행.`);
     setTimeout(() => {
         const { almondbongbong } = config.tistory;
         run(async (browser) => {
-            log.info(`아몬드봉봉 포스팅 시작`);
+            log.info('[almondbongbong]', `포스팅 시작`);
             const topicList = await getHotTopicList(browser);
             const successLogPath = path.resolve('logs/success.log');
             fs.existsSync(successLogPath) || fs.writeFileSync(successLogPath, JSON.stringify({}), 'utf-8');
@@ -38,24 +40,28 @@ const job = new cron('0 0,30 6-23 * * *', () => {
                 if (successLogTree[topicList[i]] === undefined) {
                     // TODO 포스팅
                     KEYWORD = topicList[i];
-                    log.info(`검색어 "${KEYWORD}"로 포스팅을 시작합니다`);
+                    log.info('[almondbongbong]', `검색어 "${KEYWORD}"로 포스팅을 시작합니다`);
                     successLogTree[topicList[i]] = 1;
                     break;
                 }
             }
             if (!KEYWORD) {
-                log.info('검색어 없음');
+                log.info('[almondbongbong]', '검색어 없음');
                 return;
             }
             fs.writeFileSync(successLogPath, JSON.stringify(successLogTree, null, '\t'), 'utf-8');
 
+            log.info('[almondbongbong]', `searchByKeyword start`);
             const result = await searchByKeyword(KEYWORD, browser);
+            log.info('[almondbongbong]', `buildPost`);
             const post = buildAlmondBongBongPost(KEYWORD, result.relatedKeywords, result.profile, result.news, result.summary);
             const postDirPath = path.resolve('logs/post');
             fs.existsSync(postDirPath) || fs.mkdirSync(postDirPath);
             // fs.writeFileSync(path.join(postDirPath, `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
             await closePopup(browser);
+            log.info('[almondbongbong]', `login`);
             await login(almondbongbong.id, almondbongbong.pw, browser);
+            log.info('[almondbongbong]', `postToTistory`);
             await postToTistory(
                 almondbongbong.domain,
                 post.title,
