@@ -14,7 +14,7 @@ const desiredCapabilities = (browserType, headless) => {
                     args: ['headless'],
                 } : {
                     args: [
-                        headless ? 'headless' : '--window-size=800,600',
+                        headless ? 'headless' : '--window-size=1600,900',
                     ],
                 },
             }
