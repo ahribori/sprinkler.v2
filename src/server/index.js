@@ -6,7 +6,7 @@ import log from '@logger';
 import api from './api';
 
 const app = express();
-const port = config.server.port || 8989;
+const port = config.server.port || 8080;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

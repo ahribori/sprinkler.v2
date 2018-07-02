@@ -1,14 +1,14 @@
 import express from 'express';
 import authMiddleware from '../middlewares/auth';
 
-import crawling from './crawling';
+import oauth from './oauth';
 import test from './test';
 
 const router = express.Router();
 
-router.use('*', authMiddleware);
 
-router.use('/crawling', crawling);
+router.use('/oauth', oauth);
+router.use('/test', authMiddleware);
 router.use('/test', test);
 
 router.use('/', (req, res) => {
