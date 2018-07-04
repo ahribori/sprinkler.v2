@@ -1,4 +1,3 @@
-import config from '@config';
 import fs from 'fs';
 import path from 'path';
 
@@ -6,6 +5,17 @@ const { google } = require('googleapis');
 const GOOGLE_ACCESS_TOKEN_PATH = path.resolve('./logs/google_access_token.json');
 
 export const google_oauth2_login = async ({ id, pw, client_id, client_secret, redirect_url }, browser) => {
+
+    if (fs.existsSync(GOOGLE_ACCESS_TOKEN_PATH)) {
+        const auth = JSON.parse(fs.readFileSync(GOOGLE_ACCESS_TOKEN_PATH, 'utf-8'));
+        if (auth.client_id = client_id) {
+            const now = new Date().getTime();
+            const remain = auth.expiry_date - now;
+            if (remain > 600000) {
+                return auth;
+            }
+        }
+    }
 
     const oauth2Client = new google.auth.OAuth2(
         client_id,
