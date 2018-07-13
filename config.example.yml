@@ -9,10 +9,16 @@ tistory:
     domain:
     id:
     pw:
+    client_id:
+    client_secret:
+    redirect_uri:
   almondbongbong:
     domain:
     id:
     pw:
+    client_id:
+    client_secret:
+    redirect_uri:
     seleniumProtocol:
     seleniumHost:
     seleniumPort:
