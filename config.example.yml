@@ -7,12 +7,20 @@ server:
 tistory:
   rthi:
     domain:
+    blog_name:
     id:
     pw:
+    client_id:
+    client_secret:
+    redirect_uri:
   almondbongbong:
     domain:
+    blog_name:
     id:
     pw:
+    client_id:
+    client_secret:
+    redirect_uri:
     seleniumProtocol:
     seleniumHost:
     seleniumPort:
