@@ -15,7 +15,7 @@ import { closePopup } from '../tasks/util/closePopup';
 import { tistory_oauth2_login } from '../tasks/login/tistory';
 import { postToTistoryByAccessToken } from '../tasks/post/post';
 
-const job = new cron('0 0,30 6-23 * * *', () => {
+const job = new cron('0 0,30 4-23 * * *', () => {
     const minutesTimeoutRange = 20;
     const secondTimeoutRange = 60;
     const randomTimeoutMinutes = Math.round(Math.random() * (minutesTimeoutRange - 1));
