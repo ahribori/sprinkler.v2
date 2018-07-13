@@ -12,11 +12,8 @@ import {
 } from '../tasks/crawling/daumHotTopic';
 import { buildRTHIPost } from '../tasks/post/daumHotTopic';
 import { closePopup } from '../tasks/util/closePopup';
-import { login } from '../tasks/login/tistory';
-import { postToTistory } from '../tasks/post/post';
-import TelegramBot from '../telegram';
-
-const bot = new TelegramBot();
+import { tistory_oauth2_login } from '../tasks/login/tistory';
+import { postToTistoryByAccessToken } from '../tasks/post/post';
 
 const job = new cron('0 0,30 6-23 * * *', () => {
     const minutesTimeoutRange = 20;
@@ -49,7 +46,6 @@ const job = new cron('0 0,30 6-23 * * *', () => {
                 log.info('[rthi]', '검색어 없음');
                 return;
             }
-            fs.writeFileSync(successLogPath, JSON.stringify(successLogTree, null, '\t'), 'utf-8');
 
             log.info('[rthi]', `searchByKeyword start`);
             const result = await searchByKeyword(KEYWORD, browser);
@@ -59,17 +55,22 @@ const job = new cron('0 0,30 6-23 * * *', () => {
             fs.existsSync(postDirPath) || fs.mkdirSync(postDirPath);
             // fs.writeFileSync(path.join(postDirPath, `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
             await closePopup(browser);
-            log.info('[rthi]', `login`);
-            await login(rthi.id, rthi.pw, browser);
-            log.info('[rthi]', `postToTistory`);
-            await postToTistory(
-                rthi.domain,
-                post.title,
-                post.contents,
-                post.tags,
-                browser
-            );
-            // bot.sendMessage(`검색어 "${KEYWORD}"로 포스팅을 마쳤습니다.`);
+            const auth = await tistory_oauth2_login({
+                blog_name: rthi.blog_name,
+                redirect_uri: rthi.redirect_uri,
+                id: rthi.id,
+                pw: rthi.pw,
+                client_id: rthi.client_id,
+                client_secret: rthi.client_secret,
+            }, browser);
+            await postToTistoryByAccessToken({
+                access_token: auth.access_token,
+                blogName: rthi.blog_name,
+                title: post.title,
+                content: post.contents,
+                tags: post.tags.join(','),
+            });
+            fs.writeFileSync(successLogPath, JSON.stringify(successLogTree, null, '\t'), 'utf-8');
         });
     }, timeout);
 });
