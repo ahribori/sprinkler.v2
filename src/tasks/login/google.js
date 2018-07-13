@@ -12,6 +12,7 @@ export const google_oauth2_login = async ({ id, pw, client_id, client_secret, re
             const now = new Date().getTime();
             const remain = auth.expiry_date - now;
             if (remain > 600000) {
+                log.info('[google.google_oauth2_login] get access_token in cache');
                 return auth;
             }
         }

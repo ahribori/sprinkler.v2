@@ -13,7 +13,7 @@ const oauth2Client = new google.auth.OAuth2(
 );
 const GOOGLE_ACCESS_TOKEN_PATH = path.resolve('./logs/google_access_token.json');
 
-router.get('/', async (req, res) => {
+router.get('/oauth', async (req, res) => {
     const { code } = req.query;
     const { tokens } = await oauth2Client.getToken(code);
     const auth = {
@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
     };
 
     fs.writeFileSync(GOOGLE_ACCESS_TOKEN_PATH, JSON.stringify(auth, null, 2), 'utf-8');
-    log.info('[Google.oauth2] Authenticated', JSON.stringify(auth, null, 2));
+    log.info('[google.oauth2] Authenticated', JSON.stringify(auth, null, 2));
     res.send(`<div id="oauth2_success">${JSON.stringify(auth, null, 2)}</div>`);
 });
 
