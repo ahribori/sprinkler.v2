@@ -45,6 +45,7 @@ export const postToTistoryByAccessToken = async ({ access_token, blogName, title
                 title,
                 content,
                 tags,
+                visibility: 3,
             },
         }).then(() => {
             log.info('[post.postToTistoryByAccessToken]', 'success');
