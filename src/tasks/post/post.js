@@ -1,4 +1,6 @@
+import axios from 'axios';
 import log from '@logger';
+
 /***
  * 티스토리에 글을 포스팅
  * @param tistoryUrl
@@ -30,4 +32,24 @@ export const postToTistory = async (tistoryUrl, title, contents, tags, browser) 
     await browser.click('button.btn_comm.btn_save');
     log.info('[post.postToTistory]', 'click button.btn_comm.btn_save');
     await browser.pause(5000);
+};
+
+export const postToTistoryByAccessToken = async ({ access_token, blogName, title, content, tags }) => {
+    try {
+        await await axios({
+            method: 'POST',
+            url: 'https://www.tistory.com/apis/post/write',
+            data: {
+                access_token,
+                blogName,
+                title,
+                content,
+                tags,
+            },
+        }).then(() => {
+            log.info('[post.postToTistoryByAccessToken]', 'success');
+        });
+    } catch (e) {
+        log.error('[post.postToTistoryByAccessToken]', e.message);
+    }
 };
