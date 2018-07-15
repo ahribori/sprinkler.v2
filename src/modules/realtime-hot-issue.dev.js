@@ -31,7 +31,7 @@ const r = () => {
                 // TODO 포스팅
                 KEYWORD = topicList[i];
                 log.info('[rthi]', `검색어 "${KEYWORD}"로 포스팅을 시작합니다`);
-                successLogTree[topicList[i]] = 1;
+                successLogTree[topicList[i]] = Date.now();
                 break;
             }
         }
@@ -39,7 +39,6 @@ const r = () => {
             log.info('[rthi]', '검색어 없음');
             return;
         }
-
 
         log.info('[rthi]', `searchByKeyword start`);
         const result = await searchByKeyword(KEYWORD, browser);

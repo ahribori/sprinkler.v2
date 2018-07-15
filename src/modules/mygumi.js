@@ -39,7 +39,7 @@ const job = new cron('0 0,30 6-23 * * *', () => {
                     // TODO 포스팅
                     KEYWORD = topicList[i];
                     log.info('[mygumi]', `검색어 "${KEYWORD}"로 포스팅을 시작합니다`);
-                    successLogTree[topicList[i]] = 1;
+                    successLogTree[topicList[i]] = Date.now();
                     break;
                 }
             }
