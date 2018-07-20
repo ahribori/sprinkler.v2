@@ -3,7 +3,7 @@ const psList = require('ps-list');
 const cron = require('cron').CronJob;
 
 const chromeRegex = new RegExp(/chrome/);
-const killCount = 10;
+const killCount = 15;
 
 let checkCount = 0;
 const job = new cron('0 * * * * *', () => {
