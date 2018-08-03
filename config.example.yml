@@ -1,3 +1,6 @@
+# common configuration
+process_kill_regexp:
+
 # api server configuration
 server:
   port:

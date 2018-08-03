@@ -1,4 +1,5 @@
 import log from '@logger';
+import conf from '@config';
 import EventEmitter from 'events';
 import kill from 'fkill';
 
@@ -59,7 +60,6 @@ export default class TransactionManager {
             if (this.transactionQueue.length === 0) {
                 return;
             }
-            await this.killZombie();
 
             const transaction = this.transactionQueue[0];
 
@@ -71,6 +71,8 @@ export default class TransactionManager {
                 log.info('----- DONE WITH ERROR -----');
             }
 
+            await this.killZombie();
+
             this.status = STATUS.WAITING;
             this.popTransaction();
             return this.executeTransaction();
@@ -79,17 +81,20 @@ export default class TransactionManager {
 
     killZombie = async () => {
         try {
+            if (!conf.periodic_kill_regexp) {
+                return;
+            }
             const killList = [];
-            const chromeRegex = new RegExp(/chromedriver/);
+            const chromeRegex = new RegExp(conf.process_kill_regexp, 'gi');
             const processes = await psList();
-            processes.forEach(process => {
+            for (let i = 0; i < processes.length; i++) {
+                const process = processes[i];
                 chromeRegex.test(process.name) && killList.push(process.pid);
-            });
+            }
             await kill(killList, {
                 force: true,
             });
         } catch (e) {
-            log.error(e);
         }
     }
 }
