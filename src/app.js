@@ -1,12 +1,33 @@
+import fs from 'fs';
+import path from 'path';
+import kill from 'fkill';
+import color from 'colors';
+
 if (process.env.NODE_ENV === 'production') {
     require('./selenium/polyfill');
 }
 
-import kill from 'fkill';
-
 const psList = require('ps-list');
+const modulePath = path.resolve(`${__dirname}/modules`);
+const filePathList = fs.readdirSync(modulePath);
 
-require('./modules');
+filePathList.forEach(file => {
+    if (file !== 'index.js' && new RegExp(/(.js)$/).test(file)) {
+        if (process.env.NODE_ENV === 'production') {
+            // PRODUCTION
+            if (!new RegExp(/(.dev.js)$/).test(file)) {
+                require(path.join(modulePath, file));
+                console.log(`Module loaded - ${color.cyan(file)}`);
+            }
+        } else {
+            // DEVELOPMENT
+            if (new RegExp(/(.dev.js)$/).test(file)) {
+                require(path.join(modulePath, file));
+                console.log(`Module loaded - ${color.yellow(file)}`)
+            }
+        }
+    }
+});
 
 process.on('SIGINT', async () => {
     try {
