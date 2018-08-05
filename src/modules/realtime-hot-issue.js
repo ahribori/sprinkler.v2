@@ -56,7 +56,7 @@ const job = new cron('0 0,30 4-23 * * *', () => {
             // fs.writeFileSync(path.join(postDirPath, `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
             await closePopup(browser);
             const auth = await tistory_oauth2_login({
-                blog_name: rthi.blog_name,
+                blog_identifier: 'rthi',
                 redirect_uri: rthi.redirect_uri,
                 id: rthi.id,
                 pw: rthi.pw,

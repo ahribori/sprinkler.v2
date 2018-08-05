@@ -10,7 +10,6 @@ server:
 tistory:
   rthi:
     domain:
-    blog_name:
     id:
     pw:
     client_id:
@@ -18,7 +17,6 @@ tistory:
     redirect_uri:
   almondbongbong:
     domain:
-    blog_name:
     id:
     pw:
     client_id:

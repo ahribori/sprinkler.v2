@@ -10,7 +10,8 @@ const router = express.Router();
 
 router.get('/oauth', async (req, res) => {
     const { code, state } = req.query;
-    const { client_id, client_secret, redirect_uri } = config.tistory.rthi;
+    const blog_identifier = state;
+    const { client_id, client_secret, redirect_uri } = config.tistory[blog_identifier];
     const TISTORY_ACCESS_TOKEN_PATH = path.resolve(`./logs/tistory_${state}_access_token.json`);
     const auth = {};
     axios.get(`https://www.tistory.com/oauth/access_token?client_id=${client_id}&client_secret=${client_secret}&redirect_uri=${redirect_uri}&code=${code}&grant_type=authorization_code`)

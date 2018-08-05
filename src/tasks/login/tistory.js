@@ -20,8 +20,8 @@ export const login = async (id, pw, browser) => {
     return loginResult;
 };
 
-export const tistory_oauth2_login = async ({ blog_name, id, pw, client_id, client_secret, redirect_uri }, browser) => {
-    const TISTORY_ACCESS_TOKEN_PATH = path.resolve(`./logs/tistory_${blog_name}_access_token.json`);
+export const tistory_oauth2_login = async ({ blog_identifier, id, pw, client_id, client_secret, redirect_uri }, browser) => {
+    const TISTORY_ACCESS_TOKEN_PATH = path.resolve(`./logs/tistory_${blog_identifier}_access_token.json`);
 
     if (fs.existsSync(TISTORY_ACCESS_TOKEN_PATH)) {
         const auth = JSON.parse(fs.readFileSync(TISTORY_ACCESS_TOKEN_PATH, 'utf-8'));
@@ -33,7 +33,7 @@ export const tistory_oauth2_login = async ({ blog_name, id, pw, client_id, clien
         }
     }
 
-    const url = `https://www.tistory.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code&state=${blog_name}`;
+    const url = `https://www.tistory.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code&state=${blog_identifier}`;
     await browser.url(url)
         .isExisting('#loginId')
         .setValue('#loginId', id)

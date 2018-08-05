@@ -12,7 +12,7 @@ const TISTORY_REDIRECT_URI = rthi.redirect_uri;
 const r = () => {
     run(async browser => {
         const access_token = await tistory_oauth2_login({
-            blog_name: 'rthi',
+            blog_identifier: 'rthi',
             id: TISTORY_ID,
             pw: TISTORY_PW,
             client_id: TISTORY_CLIENT_ID,
