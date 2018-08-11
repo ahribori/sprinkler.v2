@@ -1,7 +1,7 @@
 import express from 'express';
 import { run } from '../../selenium';
-import { login } from '../../tasks/login/tistory';
-import { screenshot } from '../../tasks/screenshot/screenshot';
+import { login } from '../../modules/login/tistory';
+import { screenshot } from '../../modules/screenshot/screenshot';
 
 const router = express.Router();
 

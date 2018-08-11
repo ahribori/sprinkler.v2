@@ -6,10 +6,7 @@ fs.existsSync(STORE_DIR_PATH) || fs.mkdirSync(STORE_DIR_PATH);
 
 export const save = (name = 'default', object = {}) => {
     const STORE_PATH = path.join(STORE_DIR_PATH, `${name}.json`);
-    const exist = fs.existsSync(STORE_PATH);
-    if (!exist) {
-        fs.writeFileSync(STORE_PATH, JSON.stringify(object, null, '\t'), 'utf-8');
-    }
+    fs.writeFileSync(STORE_PATH, JSON.stringify(object, null, '\t'), 'utf-8');
 };
 
 export const load = (name) => {

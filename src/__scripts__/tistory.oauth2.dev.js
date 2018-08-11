@@ -1,6 +1,6 @@
 import config from '@config';
 import { run } from '@selenium';
-import { tistory_oauth2_login } from '../tasks/login/tistory';
+import { tistory_oauth2_login } from '../modules/login/tistory';
 
 const rthi = config.tistory.rthi;
 const TISTORY_ID = rthi.id;
