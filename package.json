@@ -27,7 +27,8 @@
 						"@selenium": "./src/selenium",
 						"@config": "./src/util/config",
 						"@logger": "./src/util/logger",
-						"@cron": "./src/util/cron"
+						"@cron": "./src/util/cron",
+						"@store": "./src/util/store"
 					}
 				}
 			]

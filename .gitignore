@@ -1,4 +1,5 @@
 build
+/store
 src/runnable/**/*.dev.js
 # Created by .ignore support plugin (hsz.mobi)
 ### JetBrains template
