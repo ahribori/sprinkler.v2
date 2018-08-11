@@ -7,12 +7,12 @@ import { run } from '@selenium';
 import {
     getHotTopicList,
     searchByKeyword,
-} from '../tasks/crawling/daumHotTopic';
-import { buildAlmondBongBongPost } from '../tasks/post/daumHotTopic';
-import { closePopup } from '../tasks/util/closePopup';
-import { login } from '../tasks/login/tistory';
-import { postToTistory } from '../tasks/post/post';
-import TelegramBot from '../telegram';
+} from '../modules/crawling/daumHotTopic';
+import { buildAlmondBongBongPost } from '../modules/post/daumHotTopic';
+import { closePopup } from '../modules/util/closePopup';
+import { login } from '../modules/login/tistory';
+import { postToTistory } from '../modules/post/post';
+import TelegramBot from '../util/telegram';
 
 const bot = new TelegramBot();
 

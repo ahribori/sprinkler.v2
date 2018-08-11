@@ -25,6 +25,19 @@ tistory:
     seleniumProtocol:
     seleniumHost:
     seleniumPort:
+  ahribori2:
+    id:
+    pw:
+    client_id:
+    client_secret:
+    redirect_uri:
+  discover_new_music:
+    id:
+    pw:
+    client_id:
+    client_secret:
+    redirect_uri:
+
 
 # telegram
 telegram:
@@ -40,3 +53,6 @@ google:
   client_id:
   client_secret:
   redirect_url:
+
+youtube:
+  api_key: 

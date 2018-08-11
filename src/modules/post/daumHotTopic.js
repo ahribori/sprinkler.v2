@@ -43,7 +43,7 @@ const makeTitle = (keyword) => {
  * @param news {array}
  */
 export const buildRTHIPost = (keyword, relatedKeywords, profile, news, summary) => {
-    const templatePath = path.resolve('src/tasks/post/templates');
+    const templatePath = path.resolve('src/modules/post/templates');
     let template = fs.readFileSync(path.join(templatePath, 'real-time-hot-issue.html'), 'utf-8');
     let relatedKeywordsHTML = '';
     let newsCardListHTML = '';
@@ -88,7 +88,7 @@ export const buildRTHIPost = (keyword, relatedKeywords, profile, news, summary) 
 };
 
 export const buildAlmondBongBongPost = (keyword, relatedKeywords, profile, news, summary) => {
-    const templatePath = path.resolve('src/tasks/post/templates');
+    const templatePath = path.resolve('src/modules/post/templates');
     let template = fs.readFileSync(path.join(templatePath, 'almond-bongbong.html'), 'utf-8');
     let relatedKeywordsHTML = '';
     let newsCardListHTML = '';

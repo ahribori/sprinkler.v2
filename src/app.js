@@ -8,21 +8,21 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const psList = require('ps-list');
-const modulePath = path.resolve(`${__dirname}/modules`);
-const filePathList = fs.readdirSync(modulePath);
+const scriptsPath = path.resolve(`${__dirname}/__scripts__`);
+const filePathList = fs.readdirSync(scriptsPath);
 
 filePathList.forEach(file => {
     if (file !== 'index.js' && new RegExp(/(.js)$/).test(file)) {
         if (process.env.NODE_ENV === 'production') {
             // PRODUCTION
             if (!new RegExp(/(.dev.js)$/).test(file)) {
-                require(path.join(modulePath, file));
+                require(path.join(scriptsPath, file));
                 console.log(`Module loaded - ${color.cyan(file)}`);
             }
         } else {
             // DEVELOPMENT
             if (new RegExp(/(.dev.js)$/).test(file)) {
-                require(path.join(modulePath, file));
+                require(path.join(scriptsPath, file));
                 console.log(`Module loaded - ${color.yellow(file)}`)
             }
         }

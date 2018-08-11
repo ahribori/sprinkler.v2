@@ -1,6 +1,6 @@
 import config from '@config';
 import { run } from '@selenium';
-import { google_oauth2_login } from '../tasks/login/google';
+import { google_oauth2_login } from '../modules/login/google';
 
 const GOOGLE_ID = config.google.id;
 const GOOGLE_PW = config.google.pw;
