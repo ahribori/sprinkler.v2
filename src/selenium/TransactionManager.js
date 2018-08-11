@@ -81,7 +81,7 @@ export default class TransactionManager {
 
     killZombie = async () => {
         try {
-            if (!conf.periodic_kill_regexp) {
+            if (!conf.process_kill_regexp) {
                 return;
             }
             const killList = [];
