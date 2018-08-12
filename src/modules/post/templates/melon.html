@@ -37,6 +37,13 @@
         <article class="item container wrap_lyric">
             {{lyric}}
         </article>
+
+        <div class="item container">
+            <ul class="produce_list">
+                {{producers}}
+            </ul>
+        </div>
+
     </div>
 </div>
 </body>
@@ -109,6 +116,41 @@
         font-weight: 300;
         text-align: center;
     }
+
+    .__root__ ul.produce_list {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 0;
+        line-height: 1.4;
+    }
+
+    .__root__ .produce_list li {
+        display: flex;
+        margin: 16px;
+        align-items: center;
+        flex-basis: 200px;
+    }
+
+    .__root__ .produce_list .produce_thumb > img {
+        border-radius: 50%;
+    }
+
+    .__root__ .produce_list .produce_info {
+        margin-left: 16px;
+    }
+
+    .__root__ .produce_list .produce_info .produce_name {
+        font-size: 0.9rem;
+        font-weight: 400;
+    }
+
+    .__root__ .produce_list .produce_info .produce_type {
+        font-size: 0.8rem;
+        font-weight: 300;
+        color: #888888;
+    }
+
 
     .__root__ .screen_out {
         position: absolute;

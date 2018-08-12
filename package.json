@@ -7,7 +7,8 @@
     "build": "rimraf build && babel src --out-dir build",
     "start": "node ./scripts/start.js",
     "dev": "node_modules/.bin/nodemon --exec babel-node scripts/dev.js --watch src",
-    "clean": "node ./scripts/clean.js"
+    "clean": "node ./scripts/clean.js",
+    "test": "jest --watch --verbose"
   },
   "author": "",
   "license": "ISC",
@@ -67,6 +68,13 @@
     "babel-plugin-transform-regenerator": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "cross-env": "^5.1.4",
+    "jest": "^23.5.0",
     "nodemon": "^1.17.2"
+  },
+  "jest": {
+    "testMatch": [
+      "**/__tests__/**/*.js"
+    ],
+    "testEnvironment": "node"
   }
 }

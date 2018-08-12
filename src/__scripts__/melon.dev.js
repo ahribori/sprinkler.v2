@@ -4,6 +4,8 @@ import { buildMelonPost } from '../modules/post/melon';
 import { save, load } from '../util/store';
 import { tistory_oauth2_login } from '../modules/login/tistory';
 import { postToTistoryByAccessToken } from '../modules/post/post';
+import fs from 'fs';
+import path from 'path';
 import { run } from '../selenium';
 
 const STORE_NAME = `melon_blog_discover_new_music`;
@@ -19,6 +21,7 @@ const r = async (browser) => {
     const post = async songId => {
         const songDetails = await getSongDetailsById(songId);
         const html = await buildMelonPost(songDetails);
+        fs.writeFileSync(path.resolve('store/result.html'), html, 'utf-8');
         const auth = await tistory_oauth2_login({
             blog_identifier: 'discover_new_music',
             client_id: discover_new_music.client_id,
@@ -67,7 +70,7 @@ const r = async (browser) => {
     }
 };
 
-// run(async browser => {
-//     await r(browser);
-// });
+run(async browser => {
+    await r(browser);
+});
 
