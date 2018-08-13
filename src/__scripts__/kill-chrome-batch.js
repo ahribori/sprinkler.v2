@@ -33,4 +33,4 @@ const job = new cron('0 * * * * *', () => {
     });
 });
 
-job.start();
+// job.start();
