@@ -34,19 +34,14 @@ export const postToTistory = async (tistoryUrl, title, contents, tags, browser) 
     await browser.pause(5000);
 };
 
-export const postToTistoryByAccessToken = async ({ access_token, blogName, title, content, tags }) => {
+export const postToTistoryByAccessToken = async ({ access_token, blogName, title, content, tag = '', category = 0, visibility = 3 }) => {
+    const payload = { access_token, blogName, title, content, tag, category, visibility };
+
     try {
         await await axios({
             method: 'POST',
             url: 'https://www.tistory.com/apis/post/write',
-            data: {
-                access_token,
-                blogName,
-                title,
-                content,
-                tags,
-                visibility: 3,
-            },
+            data: payload,
         }).then(() => {
             log.info('[post.postToTistoryByAccessToken]', 'success');
         });

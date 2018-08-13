@@ -1,3 +1,6 @@
+# common configuration
+process_kill_regexp:
+
 # api server configuration
 server:
   port:
@@ -7,7 +10,6 @@ server:
 tistory:
   rthi:
     domain:
-    blog_name:
     id:
     pw:
     client_id:
@@ -15,7 +17,6 @@ tistory:
     redirect_uri:
   almondbongbong:
     domain:
-    blog_name:
     id:
     pw:
     client_id:
@@ -24,6 +25,19 @@ tistory:
     seleniumProtocol:
     seleniumHost:
     seleniumPort:
+  ahribori2:
+    id:
+    pw:
+    client_id:
+    client_secret:
+    redirect_uri:
+  discover_new_music:
+    id:
+    pw:
+    client_id:
+    client_secret:
+    redirect_uri:
+
 
 # telegram
 telegram:
@@ -39,3 +53,6 @@ google:
   client_id:
   client_secret:
   redirect_url:
+
+youtube:
+  api_key: 

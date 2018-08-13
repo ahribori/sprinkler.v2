@@ -6,14 +6,14 @@ import cron from '@cron';
 import { run } from '@selenium';
 import {
     getHotTopicList,
-} from '../tasks/crawling/naverHotTopic';
+} from '../modules/crawling/naverHotTopic';
 import {
     searchByKeyword,
-} from '../tasks/crawling/daumHotTopic';
-import { buildRTHIPost } from '../tasks/post/daumHotTopic';
-import { closePopup } from '../tasks/util/closePopup';
-import { tistory_oauth2_login } from '../tasks/login/tistory';
-import { postToTistoryByAccessToken } from '../tasks/post/post';
+} from '../modules/crawling/daumHotTopic';
+import { buildRTHIPost } from '../modules/post/daumHotTopic';
+import { closePopup } from '../modules/util/closePopup';
+import { tistory_oauth2_login } from '../modules/login/tistory';
+import { postToTistoryByAccessToken } from '../modules/post/post';
 
 const job = new cron('0 0,30 4-23 * * *', () => {
     const minutesTimeoutRange = 20;
@@ -56,7 +56,7 @@ const job = new cron('0 0,30 4-23 * * *', () => {
             // fs.writeFileSync(path.join(postDirPath, `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
             await closePopup(browser);
             const auth = await tistory_oauth2_login({
-                blog_name: rthi.blog_name,
+                blog_identifier: 'rthi',
                 redirect_uri: rthi.redirect_uri,
                 id: rthi.id,
                 pw: rthi.pw,

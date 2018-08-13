@@ -1,0 +1,198 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: 'ca-pub-9640568080207154',
+            enable_page_level_ads: true,
+        });
+    </script>
+</head>
+<body>
+<div class="__root__">
+    <div class="container">
+
+        <!-- discover-new-music-상단 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9640568080207154"
+             data-ad-slot="9558231339"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+
+        <span class="screen_out">
+            {{lyric}}
+        </span>
+
+        <div class="item container wrap_video">
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/{{videoId}}" frameborder="0"
+                    allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+
+        <div class="item container">
+            <div class="wrap_info">
+                <div class="thumb">
+                    <img class="thumbnail_image"
+                         src="{{thumbnail_image}}" alt="">
+                </div>
+                <div class="info">
+                    <dl>
+                        <dt>앨범</dt>
+                        <dd>{{album}}</dd>
+                        <dt>발매일</dt>
+                        <dd>{{releaseDate}}</dd>
+                        <dt>장르</dt>
+                        <dd>{{genre}}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- discover-new-music-하단 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9640568080207154"
+             data-ad-slot="2458486424"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+
+        <article class="item container wrap_lyric">
+            {{lyric}}
+        </article>
+
+        <div class="item container">
+            <ul class="produce_list">
+                {{producers}}
+            </ul>
+        </div>
+
+    </div>
+</div>
+</body>
+<style>
+    @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+    .__root__ * {
+        font-family: 'Noto Sans KR', sans-serif;
+        box-sizing: border-box;
+    }
+
+    .__root__ h1, h2, h3 {
+        font-weight: 400;
+    }
+
+    .__root__ {
+    }
+
+    .__root__ .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 16px;
+    }
+
+    .__root__ .item {
+        width: 100%;
+        max-width: 600px;
+        min-width: 250px;
+    }
+
+    .__root__ .wrap_info {
+        display: flex;
+        flex-wrap: wrap;
+        border: 1px solid #e5e5e5;
+        width: 100%;
+    }
+
+    .__root__ .wrap_info .thumb {
+        flex: 1 1 180px;
+    }
+
+    .__root__ .wrap_info .thumbnail_image {
+        width: 100%;
+    }
+
+    .__root__ .wrap_info .info {
+        flex: 1 1 300px;
+        padding: 24px;
+    }
+
+    .__root__ .wrap_info .info dt, dd {
+        font-size: 14px;
+    }
+
+    .__root__ .wrap_info .info dt {
+        float: left;
+        color: #888888;
+    }
+
+    .__root__ .wrap_info .info dd {
+        font-weight: 300;
+        margin-left: 80px;
+        margin-bottom: 20px;
+    }
+
+    .__root__ .wrap_lyric {
+        font-size: 14px;
+        line-height: 2.5;
+        font-weight: 300;
+        text-align: center;
+    }
+
+    .__root__ ul.produce_list {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 0;
+        line-height: 1.4;
+    }
+
+    .__root__ .produce_list li {
+        display: flex;
+        margin: 16px;
+        align-items: center;
+        flex-basis: 200px;
+    }
+
+    .__root__ .produce_list .produce_thumb > img {
+        border-radius: 50%;
+    }
+
+    .__root__ .produce_list .produce_info {
+        margin-left: 16px;
+    }
+
+    .__root__ .produce_list .produce_info .produce_name {
+        font-size: 0.9rem;
+        font-weight: 400;
+    }
+
+    .__root__ .produce_list .produce_info .produce_type {
+        font-size: 0.8rem;
+        font-weight: 300;
+        color: #888888;
+    }
+
+    .__root__ .screen_out {
+        position: absolute;
+        left: -9999px;
+    }
+
+    @media screen and (max-width: 500px) {
+        .__root__ .container {
+            padding: 5px;
+        }
+
+        .__root__ .wrap_info .info {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    }
+</style>

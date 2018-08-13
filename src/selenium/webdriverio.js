@@ -1,6 +1,8 @@
 import log from '@logger';
+import TransactionManager from './TransactionManager';
 
 const webdriverio = require('webdriverio');
+const manager = new TransactionManager();
 
 const desiredCapabilities = (browserType, headless) => {
     if (typeof browserType !== 'string') {
@@ -27,29 +29,24 @@ const desiredCapabilities = (browserType, headless) => {
 
 export default {
     run: async (actions, options = {}) => {
+
         const seleniumOptions = {
-            desiredCapabilities: desiredCapabilities(options.browserType || 'chrome', options.headless),
+            desiredCapabilities: desiredCapabilities(options.browserType || 'firefox', options.headless),
             protocol: options.protocol || 'http',
             host: options.host || '127.0.0.1',
             port: options.port || '4444',
         };
-        log.info('============ RUN ============');
+
         const browser = webdriverio.remote(seleniumOptions);
-        try {
+
+        const transaction = async () => {
+            log.info('----- RUN -----');
             await browser.init();
-            const results = await actions(browser);
+            await actions(browser);
             await browser.end();
-            log.info('============ DONE ============');
-            return results;
-        } catch (e) {
-            log.info('############### Error ###############');
-            log.error(e);
-            try {
-                await browser.end();
-            } catch (e) {
-                log.error('[webdriverio.browser.end]', e);
-            }
-            log.info('============ DONE WITH ERROR ============');
-        }
+            log.info('----- DONE -----');
+        };
+
+        manager.pushTransaction(transaction);
     }
 }

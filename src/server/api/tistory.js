@@ -4,13 +4,16 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
+import authMiddleware from '../middlewares/auth';
+import { run } from '../../selenium';
+import { login } from '../../modules/login/tistory';
 
 const router = express.Router();
 
-
 router.get('/oauth', async (req, res) => {
     const { code, state } = req.query;
-    const { client_id, client_secret, redirect_uri } = config.tistory.rthi;
+    const blog_identifier = state;
+    const { client_id, client_secret, redirect_uri } = config.tistory[blog_identifier];
     const TISTORY_ACCESS_TOKEN_PATH = path.resolve(`./logs/tistory_${state}_access_token.json`);
     const auth = {};
     axios.get(`https://www.tistory.com/oauth/access_token?client_id=${client_id}&client_secret=${client_secret}&redirect_uri=${redirect_uri}&code=${code}&grant_type=authorization_code`)
@@ -26,6 +29,15 @@ router.get('/oauth', async (req, res) => {
             res.send(`<div id="oauth2_failure">${error.message}</div>`);
         });
 
+});
+
+router.post('/login', authMiddleware);
+router.post('/login', async (req, res) => {
+    const { id, pw } = req.body;
+    await run(async browser => {
+        await login(id, pw, browser);
+    });
+    return res.json('login request success.');
 });
 
 export default router;

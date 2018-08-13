@@ -1,6 +1,6 @@
 import config from '@config';
 import { run } from '@selenium';
-import { tistory_oauth2_login } from '../tasks/login/tistory';
+import { tistory_oauth2_login } from '../modules/login/tistory';
 
 const rthi = config.tistory.rthi;
 const TISTORY_ID = rthi.id;
@@ -12,7 +12,7 @@ const TISTORY_REDIRECT_URI = rthi.redirect_uri;
 const r = () => {
     run(async browser => {
         const access_token = await tistory_oauth2_login({
-            blog_name: 'rthi',
+            blog_identifier: 'rthi',
             id: TISTORY_ID,
             pw: TISTORY_PW,
             client_id: TISTORY_CLIENT_ID,
