@@ -1,3 +1,4 @@
+import log from '@logger';
 import path from 'path';
 import fs from 'fs';
 import { minify } from 'html-minifier';
@@ -29,7 +30,7 @@ const buildProducersMarkup = (producers) => {
             .replace('{{producer_name}}', producer.name)
             .replace('{{producer_type}}', producer.type);
     });
-
+    log.info(`[post/melon - buildProducersMarkup] done.`);
     return html;
 };
 
@@ -56,5 +57,6 @@ export const buildMelonPost = async (songDetails) => {
         collapseWhitespace: true,
     };
 
+    log.info(`[post/melon - buildMelonPost] done.`);
     return minify(template, minifyOptions);
 };

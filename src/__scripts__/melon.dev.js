@@ -22,6 +22,7 @@ const r = async (browser) => {
         const songDetails = await getSongDetailsById(songId);
         const html = await buildMelonPost(songDetails);
         fs.writeFileSync(path.resolve('store/result.html'), html, 'utf-8');
+
         const auth = await tistory_oauth2_login({
             blog_identifier: 'discover_new_music',
             client_id: discover_new_music.client_id,
@@ -70,7 +71,6 @@ const r = async (browser) => {
     }
 };
 
-run(async browser => {
-    await r(browser);
-});
-
+// run(async browser => {
+//     await r(browser);
+// });

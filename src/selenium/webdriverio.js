@@ -31,7 +31,7 @@ export default {
     run: async (actions, options = {}) => {
 
         const seleniumOptions = {
-            desiredCapabilities: desiredCapabilities(options.browserType || 'chrome', options.headless),
+            desiredCapabilities: desiredCapabilities(options.browserType || 'firefox', options.headless),
             protocol: options.protocol || 'http',
             host: options.host || '127.0.0.1',
             port: options.port || '4444',

@@ -1,9 +1,11 @@
+import log from '@logger';
 import jsdom from 'jsdom';
 import axios from 'axios';
 
 const { JSDOM } = jsdom;
 
 export const getMelonCharts = async () => {
+    log.info('[crawling/melon - getMelonCharts] GET https://www.melon.com/chart/index.htm');
     const response = await axios.get('https://www.melon.com/chart/index.htm');
     const dom = new JSDOM(response.data);
     const document = dom.window.document;
@@ -26,19 +28,21 @@ export const getMelonCharts = async () => {
 
         chart.push(song);
     }
+    log.info(`[crawling/melon - getMelonCharts] chart.length: ${chart.length}`);
     return chart;
 };
 
 export const getSongDetailsById = async songId => {
+    log.info(`[crawling/melon - getSongDetailsById] GET https://www.melon.com/song/detail.htm?songId=${songId}`);
     const response = await axios.get(`https://www.melon.com/song/detail.htm?songId=${songId}`);
     const dom = new JSDOM(response.data);
     const document = dom.window.document;
     const songDetails = {};
 
     // 멜론 곡 id
-    songDetails.id = songId,
-        // 곡 제목
-        document.querySelector('#downloadfrm div.song_name > strong').remove();
+    songDetails.id = songId;
+    // 곡 제목
+    document.querySelector('#downloadfrm div.song_name > strong').remove();
     songDetails.title = document.querySelector('#downloadfrm div.song_name').innerHTML
         .replace(/\t/g, '').replace(/\n/g, '');
     // 아티스트
@@ -70,6 +74,6 @@ export const getSongDetailsById = async songId => {
             thumbnail_image,
         })
     }
-
+    log.info(`[crawling/melon - getSongDetailsById] songDetails: `, songDetails);
     return songDetails;
 };
