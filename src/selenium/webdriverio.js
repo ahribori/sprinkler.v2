@@ -21,6 +21,14 @@ const desiredCapabilities = (browserType, headless) => {
                 },
             }
         }
+        case 'FIREFOX': {
+            return {
+                browserName: 'firefox',
+                'moz:firefoxOptions': {
+                    args: ['-headless'],
+                },
+            }
+        }
         default: {
             // TODO
         }
