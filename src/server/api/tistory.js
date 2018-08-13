@@ -4,9 +4,11 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
+import authMiddleware from '../middlewares/auth';
+import { run } from '../../selenium';
+import { login } from '../../modules/login/tistory';
 
 const router = express.Router();
-
 
 router.get('/oauth', async (req, res) => {
     const { code, state } = req.query;
@@ -27,6 +29,15 @@ router.get('/oauth', async (req, res) => {
             res.send(`<div id="oauth2_failure">${error.message}</div>`);
         });
 
+});
+
+router.post('/login', authMiddleware);
+router.post('/login', async (req, res) => {
+    const { id, pw } = req.body;
+    await run(async browser => {
+        await login(id, pw, browser);
+    });
+    return res.json('login request success.');
 });
 
 export default router;
