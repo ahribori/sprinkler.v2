@@ -12,8 +12,8 @@ const cron = require('cron').CronJob;
 const STORE_NAME = `melon_blog_discover_new_music`;
 const { discover_new_music } = config.tistory;
 
-const job = new cron('0 0 8-23 * * *', () => {
-    const minutesTimeoutRange = 30;
+const job = new cron('0 0,20,40 8-23 * * *', () => {
+    const minutesTimeoutRange = 10;
     const secondTimeoutRange = 60;
     const randomTimeoutMinutes = Math.round(Math.random() * (minutesTimeoutRange - 1));
     const randomTimeoutSecond = Math.round(Math.random() * (secondTimeoutRange - 1));
