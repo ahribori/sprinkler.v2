@@ -1,21 +1,19 @@
 import log from '@logger';
-import fs from 'fs';
-import path from 'path';
+import { load } from '../../util/store';
 
 const { google } = require('googleapis');
-const GOOGLE_ACCESS_TOKEN_PATH = path.resolve('./logs/google_access_token.json');
+
+const STORE_NAME = 'google_access_token';
 
 export const google_oauth2_login = async ({ id, pw, client_id, client_secret, redirect_url }, browser) => {
 
-    if (fs.existsSync(GOOGLE_ACCESS_TOKEN_PATH)) {
-        const auth = JSON.parse(fs.readFileSync(GOOGLE_ACCESS_TOKEN_PATH, 'utf-8'));
-        if (auth.client_id = client_id) {
-            const now = new Date().getTime();
-            const remain = auth.expiry_date - now;
-            if (remain > 600000) {
-                log.info('[google.google_oauth2_login] get access_token in cache');
-                return auth;
-            }
+    const cache = load(STORE_NAME);
+    if (cache && cache.client_id === client_id) {
+        const now = new Date().getTime();
+        const remain = cache.expiry_date - now;
+        if (remain > 600000) {
+            log.info('[google.google_oauth2_login] get access_token in cache');
+            return cache;
         }
     }
 
@@ -50,5 +48,5 @@ export const google_oauth2_login = async ({ id, pw, client_id, client_secret, re
         .click('#passwordNext')
         .waitForExist('#oauth2_success', 30000);
 
-    return JSON.parse(fs.readFileSync(GOOGLE_ACCESS_TOKEN_PATH, 'utf-8'));
+    return load(STORE_NAME);
 };
