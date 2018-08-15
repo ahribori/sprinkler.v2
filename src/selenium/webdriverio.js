@@ -25,7 +25,7 @@ const desiredCapabilities = (browserType, headless) => {
             return {
                 browserName: 'firefox',
                 'moz:firefoxOptions': {
-                    args: ['-headless'],
+                    args: process.env.NODE_env === 'production' ? ['-headless'] : [],
                 },
             }
         }
