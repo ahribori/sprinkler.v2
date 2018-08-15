@@ -6,17 +6,16 @@ import cron from '@cron';
 import { run } from '@selenium';
 import {
     getHotTopicList,
+} from '../modules/crawling/naverHotTopic';
+import {
     searchByKeyword,
 } from '../modules/crawling/daumHotTopic';
 import { buildAlmondBongBongPost } from '../modules/post/daumHotTopic';
 import { closePopup } from '../modules/util/closePopup';
-import { login } from '../modules/login/tistory';
-import { postToTistory } from '../modules/post/post';
-import TelegramBot from '../util/telegram';
+import { tistory_oauth2_login } from '../modules/login/tistory';
+import { postToTistoryByAccessToken } from '../modules/post/post';
 
-const bot = new TelegramBot();
-
-const job = new cron('0 0,30 6-23 * * *', () => {
+const job = new cron('0 0,30 4-23 * * *', () => {
     const minutesTimeoutRange = 20;
     const secondTimeoutRange = 60;
     const randomTimeoutMinutes = Math.round(Math.random() * (minutesTimeoutRange - 1));
@@ -24,7 +23,7 @@ const job = new cron('0 0,30 6-23 * * *', () => {
     const timeout = ((randomTimeoutMinutes * 60) + (randomTimeoutSecond)) * 1000;
     log.info('[mygumi]', `${randomTimeoutMinutes}분 ${randomTimeoutSecond}초 후에 실행.`);
     setTimeout(() => {
-        const { almondbongbong } = config.tistory;
+        const { mygumi } = config.tistory;
         run(async (browser) => {
             log.info('[mygumi]', `포스팅 시작`);
             const topicList = await getHotTopicList(browser);
@@ -47,7 +46,6 @@ const job = new cron('0 0,30 6-23 * * *', () => {
                 log.info('[mygumi]', '검색어 없음');
                 return;
             }
-            fs.writeFileSync(successLogPath, JSON.stringify(successLogTree, null, '\t'), 'utf-8');
 
             log.info('[mygumi]', `searchByKeyword start`);
             const result = await searchByKeyword(KEYWORD, browser);
@@ -57,21 +55,22 @@ const job = new cron('0 0,30 6-23 * * *', () => {
             fs.existsSync(postDirPath) || fs.mkdirSync(postDirPath);
             // fs.writeFileSync(path.join(postDirPath, `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
             await closePopup(browser);
-            log.info('[mygumi]', `login`);
-            await login(almondbongbong.id, almondbongbong.pw, browser);
-            log.info('[mygumi]', `postToTistory`);
-            await postToTistory(
-                'http://mygumi2.tistory.com',
-                post.title,
-                post.contents,
-                post.tags,
-                browser
-            );
-            // bot.sendMessage(`검색어 "${KEYWORD}"로 포스팅을 마쳤습니다.`);
-        }, {
-            protocol: almondbongbong.seleniumProtocol,
-            host: almondbongbong.seleniumHost,
-            port: almondbongbong.seleniumPort,
+            const auth = await tistory_oauth2_login({
+                blog_identifier: 'mygumi',
+                redirect_uri: mygumi.redirect_uri,
+                id: mygumi.id,
+                pw: mygumi.pw,
+                client_id: mygumi.client_id,
+                client_secret: mygumi.client_secret,
+            }, browser);
+            await postToTistoryByAccessToken({
+                access_token: auth.access_token,
+                blogName: 'mygumi2',
+                title: post.title,
+                content: post.contents,
+                tags: post.tags.join(','),
+            });
+            fs.writeFileSync(successLogPath, JSON.stringify(successLogTree, null, '\t'), 'utf-8');
         });
     }, timeout);
 });

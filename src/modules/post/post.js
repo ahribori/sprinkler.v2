@@ -38,7 +38,7 @@ export const postToTistoryByAccessToken = async ({ access_token, blogName, title
     const payload = { access_token, blogName, title, content, tag, category, visibility };
 
     try {
-        await await axios({
+        await axios({
             method: 'POST',
             url: 'https://www.tistory.com/apis/post/write',
             data: payload,
@@ -46,6 +46,6 @@ export const postToTistoryByAccessToken = async ({ access_token, blogName, title
             log.info('[post.postToTistoryByAccessToken]', 'success');
         });
     } catch (e) {
-        log.error('[post.postToTistoryByAccessToken]', e.message);
+        log.error('[post.postToTistoryByAccessToken]', e);
     }
 };

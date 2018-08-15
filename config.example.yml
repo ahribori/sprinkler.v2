@@ -9,22 +9,23 @@ server:
 # tistory
 tistory:
   rthi:
-    domain:
     id:
     pw:
     client_id:
     client_secret:
     redirect_uri:
   almondbongbong:
-    domain:
     id:
     pw:
     client_id:
     client_secret:
     redirect_uri:
-    seleniumProtocol:
-    seleniumHost:
-    seleniumPort:
+  mygumi:
+    id:
+    pw:
+    client_id:
+    client_secret:
+    redirect_uri:
   ahribori2:
     id:
     pw:
