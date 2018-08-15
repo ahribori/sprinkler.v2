@@ -65,7 +65,7 @@ const job = new cron('0 0,30 4-23 * * *', () => {
             }, browser);
             await postToTistoryByAccessToken({
                 access_token: auth.access_token,
-                blogName: rthi.blog_name,
+                blogName: 'realtime-hot-issue-analyze',
                 title: post.title,
                 content: post.contents,
                 tags: post.tags.join(','),
