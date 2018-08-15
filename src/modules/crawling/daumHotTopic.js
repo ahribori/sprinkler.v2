@@ -142,7 +142,7 @@ export const searchByKeyword = async (keyword, browser) => {
                         thumb[0] : 'http://i1.daumcdn.net/img-media/mobile/meta/news.png',
                 });
             } catch (e) {
-                log.error('[daumHotTopic.getNews]', e);
+                throw e;
             }
         }
         log.info('[daumHotTopic.getNews]', news.length > 0 ? news : 'News not exist');
