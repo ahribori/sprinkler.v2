@@ -74,4 +74,4 @@ const job = new cron('0 0,30 4-23 * * *', () => {
         });
     }, timeout);
 });
-job.start();
+// job.start();

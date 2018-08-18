@@ -5,20 +5,19 @@ import log from '@logger';
 import { run } from '@selenium';
 import {
     getHotTopicList,
-} from '../modules/crawling/naverHotTopic';
+} from '../modules/crawling/daumHotTopic';
 import {
     searchByKeyword,
 } from '../modules/crawling/daumHotTopic';
-import { buildAlmondBongBongPost } from '../modules/post/daumHotTopic';
+import { buildRTHIPost } from '../modules/post/daumHotTopic';
 import { closePopup } from '../modules/util/closePopup';
 import { tistory_oauth2_login } from '../modules/login/tistory';
 import { postToTistoryByAccessToken } from '../modules/post/post';
 
-const { almondbongbong } = config.tistory;
-
 const r = () => {
+    const { today_log } = config.tistory;
     run(async (browser) => {
-        log.info('[almondbongbong]', `포스팅 시작`);
+        log.info('[today_log]', `포스팅 시작`);
         const topicList = await getHotTopicList(browser);
         const successLogPath = path.resolve('logs/success.log');
         fs.existsSync(successLogPath) || fs.writeFileSync(successLogPath, JSON.stringify({}), 'utf-8');
@@ -30,35 +29,35 @@ const r = () => {
             if (successLogTree[topicList[i]] === undefined) {
                 // TODO 포스팅
                 KEYWORD = topicList[i];
-                log.info('[almondbongbong]', `검색어 "${KEYWORD}"로 포스팅을 시작합니다`);
+                log.info('[today_log]', `검색어 "${KEYWORD}"로 포스팅을 시작합니다`);
                 successLogTree[topicList[i]] = Date.now();
                 break;
             }
         }
         if (!KEYWORD) {
-            log.info('[almondbongbong]', '검색어 없음');
+            log.info('[today_log]', '검색어 없음');
             return;
         }
 
-        log.info('[almondbongbong]', `searchByKeyword start`);
+        log.info('[today_log]', `searchByKeyword start`);
         const result = await searchByKeyword(KEYWORD, browser);
-        log.info('[almondbongbong]', `buildPost`);
-        const post = buildAlmondBongBongPost(KEYWORD, result.relatedKeywords, result.profile, result.news, result.summary);
+        log.info('[today_log]', `buildPost`);
+        const post = buildRTHIPost(KEYWORD, result.relatedKeywords, result.profile, result.news, result.summary);
         const postDirPath = path.resolve('logs/post');
         fs.existsSync(postDirPath) || fs.mkdirSync(postDirPath);
         // fs.writeFileSync(path.join(postDirPath, `${Date.now()}_${KEYWORD}.html`), post.contents, 'utf-8');
         await closePopup(browser);
         const auth = await tistory_oauth2_login({
-            blog_identifier: 'almondbongbong',
-            redirect_uri: almondbongbong.redirect_uri,
-            id: almondbongbong.id,
-            pw: almondbongbong.pw,
-            client_id: almondbongbong.client_id,
-            client_secret: almondbongbong.client_secret,
+            blog_identifier: 'today_log',
+            redirect_uri: today_log.redirect_uri,
+            id: today_log.id,
+            pw: today_log.pw,
+            client_id: today_log.client_id,
+            client_secret: today_log.client_secret,
         }, browser);
         await postToTistoryByAccessToken({
             access_token: auth.access_token,
-            blogName: 'almondbong2',
+            blogName: 'today-log',
             title: post.title,
             content: post.contents,
             tags: post.tags.join(','),

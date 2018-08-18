@@ -14,31 +14,12 @@ tistory:
     client_id:
     client_secret:
     redirect_uri:
-  almondbongbong:
+  today_log:
     id:
     pw:
     client_id:
     client_secret:
     redirect_uri:
-  mygumi:
-    id:
-    pw:
-    client_id:
-    client_secret:
-    redirect_uri:
-  ahribori2:
-    id:
-    pw:
-    client_id:
-    client_secret:
-    redirect_uri:
-  discover_new_music:
-    id:
-    pw:
-    client_id:
-    client_secret:
-    redirect_uri:
-
 
 # telegram
 telegram:
@@ -56,4 +37,4 @@ google:
   redirect_url:
 
 youtube:
-  api_key: 
+  api_key:
