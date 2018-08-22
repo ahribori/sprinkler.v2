@@ -45,13 +45,25 @@ export default {
             port: options.port || '4444',
         };
 
+        const { callback } = options;
+
         const browser = webdriverio.remote(seleniumOptions);
 
         const transaction = async () => {
             log.info('----- RUN -----');
-            await browser.init();
-            await actions(browser);
-            await browser.end();
+            try {
+                await browser.init();
+                await actions(browser);
+                await browser.end();
+                if (typeof callback === 'function') {
+                    callback(true);
+                }
+            } catch (e) {
+                if (typeof callback === 'function') {
+                    callback(false);
+                }
+                throw e;
+            }
             log.info('----- DONE -----');
         };
 
