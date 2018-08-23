@@ -85,11 +85,11 @@ export default class TransactionManager {
                 return;
             }
             const killList = [];
-            const chromeRegex = new RegExp(conf.process_kill_regexp, 'gi');
+            const killRegex = new RegExp(conf.process_kill_regexp, 'gi');
             const processes = await psList();
             for (let i = 0; i < processes.length; i++) {
                 const process = processes[i];
-                chromeRegex.test(process.name) && killList.push(process.pid);
+                killRegex.test(process.name) && killList.push(process.pid);
             }
             await kill(killList, {
                 force: true,

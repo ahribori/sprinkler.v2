@@ -1,3 +1,7 @@
+# run script configuration
+script_ignore_pattern:
+-
+
 # common configuration
 process_kill_regexp:
 
