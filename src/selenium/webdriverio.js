@@ -1,8 +1,11 @@
 import log from '@logger';
+import conf from '@config';
 import TransactionManager from './TransactionManager';
 
 const webdriverio = require('webdriverio');
 const manager = new TransactionManager();
+
+const { defaultBrowser } = conf;
 
 const desiredCapabilities = (browserType, headless) => {
     if (typeof browserType !== 'string') {
@@ -39,7 +42,7 @@ export default {
     run: async (actions, options = {}) => {
 
         const seleniumOptions = {
-            desiredCapabilities: desiredCapabilities(options.browserType || 'firefox', options.headless),
+            desiredCapabilities: desiredCapabilities(options.browserType || defaultBrowser || 'firefox', options.headless),
             protocol: options.protocol || 'http',
             host: options.host || '127.0.0.1',
             port: options.port || '4444',

@@ -5,6 +5,10 @@ script_ignore_pattern:
 # common configuration
 process_kill_regexp:
 
+# selenium
+selenium:
+  defaultBrowser:
+
 # api server configuration
 server:
   port:
