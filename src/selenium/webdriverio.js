@@ -15,7 +15,7 @@ const desiredCapabilities = (browserType, headless) => {
         case 'CHROME': {
             return {
                 browserName: 'chrome',
-                chromeOptions: process.env.NODE_env === 'production' ? {
+                chromeOptions: process.env.NODE_ENV === 'production' ? {
                     args: ['headless'],
                 } : {
                     args: [
@@ -28,7 +28,7 @@ const desiredCapabilities = (browserType, headless) => {
             return {
                 browserName: 'firefox',
                 'moz:firefoxOptions': {
-                    args: process.env.NODE_env === 'production' ? ['-headless'] : [],
+                    args: process.env.NODE_ENV === 'production' ? ['-headless'] : [],
                 },
             }
         }
