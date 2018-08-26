@@ -5,7 +5,7 @@ import TransactionManager from './TransactionManager';
 const webdriverio = require('webdriverio');
 const manager = new TransactionManager();
 
-const { defaultBrowser } = conf.selenium;
+const { defaultBrowser } = conf;
 
 const desiredCapabilities = (browserType, headless) => {
     if (typeof browserType !== 'string') {

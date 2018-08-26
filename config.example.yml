@@ -1,13 +1,8 @@
-# run script configuration
-script_ignore_pattern:
--
-
 # common configuration
-process_kill_regexp:
-
-# selenium
-selenium:
-  defaultBrowser:
+include:
+exclude:
+kill:
+defaultBrowser:
 
 # api server configuration
 server:

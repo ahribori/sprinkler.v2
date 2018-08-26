@@ -1,26 +1,31 @@
 import config from '@config';
 import fs from 'fs';
 import path from 'path';
-import kill from 'fkill';
+import fkill from 'fkill';
 import color from 'colors';
 
 if (process.env.NODE_ENV === 'production') {
     require('./selenium/polyfill');
 }
 
-const psList = require('ps-list');
-const scriptsPath = path.resolve(`${__dirname}/__scripts__`);
-const filePathList = fs.readdirSync(scriptsPath);
+const { include, exclude, kill } = config;
 
-const { script_ignore_pattern, process_kill_regexp } = config;
-if (script_ignore_pattern) {
-    console.log(`Ignore scripts by following patterns - ${color.red(script_ignore_pattern)}`);
+if (include) {
+    console.log(`Include scripts by following patterns - ${color.cyan(include)}`);
+}
+if (exclude) {
+    console.log(`Exclude scripts by following patterns - ${color.red(exclude)}`);
 }
 
-const checkIgnore = (file) => {
+const psList = require('ps-list');
+const scriptsPath = path.resolve(`${__dirname}/__scripts__`);
+const filePathList = fs.readdirSync(scriptsPath).filter(file => include ? new RegExp(include).test(file) : true);
+const scriptLoaded = [];
+
+const checkExclude = (file) => {
     let ignore = false;
-    for (let i = 0, length = script_ignore_pattern.length; i < length; i++) {
-        const pattern = script_ignore_pattern[i];
+    for (let i = 0, length = exclude.length; i < length; i++) {
+        const pattern = exclude[i];
         if (new RegExp(pattern).test(file)) {
             ignore = true;
             break;
@@ -39,38 +44,39 @@ for (let i = 0, length = filePathList.length; i < length; i++) {
         if (process.env.NODE_ENV === 'production') {
             // PRODUCTION
             if (!new RegExp(/(.dev.js)$/).test(file)) {
-                if (script_ignore_pattern && checkIgnore(file)) {
+                if (exclude && checkExclude(file)) {
                     continue;
                 }
+                scriptLoaded.push(file);
                 require(path.join(scriptsPath, file));
-                console.log(`Module loaded - ${color.cyan(file)}`);
             }
         } else {
             // DEVELOPMENT
             if (new RegExp(/(.dev.js)$/).test(file)) {
-                if (script_ignore_pattern && checkIgnore(file)) {
+                if (exclude && checkExclude(file)) {
                     continue;
                 }
+                scriptLoaded.push(file);
                 require(path.join(scriptsPath, file));
-                console.log(`Module loaded - ${color.yellow(file)}`)
             }
         }
     }
 }
+console.log(`Scripts loaded - ${color.cyan(scriptLoaded)}`)
 
 process.on('SIGINT', async () => {
     try {
-        if (!process_kill_regexp) {
+        if (!kill) {
             return;
         }
         const killList = [];
-        const killRegex = new RegExp(process_kill_regexp, 'gi');
+        const killRegex = new RegExp(kill, 'gi');
         const processes = await psList();
         for (let i = 0; i < processes.length; i++) {
             const process = processes[i];
             killRegex.test(process.name) && killList.push(process.pid);
         }
-        await kill(killList, {
+        await fkill(killList, {
             force: true,
         });
     } catch (e) {
