@@ -1,4 +1,3 @@
-import config from '@config';
 import { run } from '../selenium';
 import { heaven } from '../modules/post/heaven';
 

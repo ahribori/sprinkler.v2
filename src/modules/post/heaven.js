@@ -1,4 +1,5 @@
 import config from '@config';
+import log from '@logger';
 
 const { id, pw } = config.heaven;
 
@@ -11,6 +12,8 @@ export const heaven = async browser => {
     const CRAWLING_TITLE_EXCLUDE_PATTERN = '(뽐|뽐뿌)';
     const CRAWLING_CONTENTS_EXCLUDE_PATTERN = '(뽐|뽐뿌)';
     const MAX_CONTENTS_LENGTH = 80;
+
+    log.info('[heaven]', `start`);
 
     // 크롤링
     await browser.url('http://www.ppomppu.co.kr/zboard/zboard.php?id=freeboard');
@@ -41,29 +44,32 @@ export const heaven = async browser => {
             continue;
         }
 
+        log.info('[heaven]', `navigate ${article.link}`);
         await browser.url(article.link);
 
         const contents = await browser.getText('td.board-contents');
 
         // 컨텐츠 길이 필터
         if (contents && contents.length > MAX_CONTENTS_LENGTH) {
+            log.info('[heaven]', `continue cause: ${contents.length} > ${MAX_CONTENTS_LENGTH}`);
             continue;
         }
         // 컨텐츠 필터
         if (new RegExp(CRAWLING_CONTENTS_EXCLUDE_PATTERN, 'gi').test(contents)) {
+            log.info('[heaven]', `continue cause: CRAWLING_CONTENTS_EXCLUDE_PATTERN`);
             continue;
         }
 
-        console.log(`제목: ${article.title}`);
-        console.log(`내용: ${contents}`);
-        console.log(`길이: ${contents.length}`);
+        log.info(`제목: ${article.title}`);
+        log.info(`내용: ${contents}`);
+        log.info(`길이: ${contents.length}`);
         postingPayload.title = article.title;
         postingPayload.contents = contents;
         break;
     }
 
     // 로그인
-    console.log(`헬븐넷 로그인 ${id}//${pw}`);
+    log.info('[heaven]', `헬븐넷 로그인 ${id}//${pw}`);
     await browser.url('https://hellven.net');
     await browser.waitForExist(ASIDE_MENU, WAIT_FOR_EXIST_TIME);
 
@@ -83,10 +89,12 @@ export const heaven = async browser => {
 
     await browser.click(LOGIN_BUTTON);
     await browser.pause(3000);
+    log.info('[heaven]', `Login success`);
 
     // 글쓰기
     await browser.url('https://hellven.net/bbs/write.php?bo_table=fr5');
     await browser.waitForExist('#wr_subject', WAIT_FOR_EXIST_TIME);
+    log.info('[heaven]', `Set title`);
     await browser.execute((title) => {
         document.querySelector('#wr_subject').value = title;
     }, postingPayload.title);
@@ -96,18 +104,24 @@ export const heaven = async browser => {
     await browser.waitForExist('#se2_iframe', WAIT_FOR_EXIST_TIME);
     await browser.waitForExist('.se2_to_text', WAIT_FOR_EXIST_TIME);
     await browser.pause(5000);
+    log.info('[heaven]', `Click text tab`);
     await browser.click('.se2_to_text');
-    if (process.env.NODE_ENV === 'development') {
+    log.info('[heaven]', `Alert accept`);
+    try {
         await browser.alertAccept();
+    } catch (e) {
+        console.log(e);
     }
     await browser.pause(5000);
     await browser.element('textarea.se2_input_syntax.se2_input_text');
     await browser.waitForExist('textarea.se2_input_syntax.se2_input_text', WAIT_FOR_EXIST_TIME);
+    log.info('[heaven]', `Set contents`);
     await browser.execute((contents) => {
         document.querySelector('textarea.se2_input_syntax.se2_input_text').value = contents;
     }, postingPayload.contents);
     await browser.frameParent();
     await browser.pause(1000);
+    log.info('[heaven]', `Submit`);
     await browser.click('#btn_submit');
     await browser.pause(1000);
 };

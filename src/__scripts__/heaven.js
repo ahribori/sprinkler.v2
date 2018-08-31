@@ -11,7 +11,7 @@ const job = new cron('0 0,30 0,1,2,19-23 * * *', () => {
     setTimeout(() => {
         run(async browser => {
             await heaven(browser);
-        });
+        }, { headless: false });
     }, timeout);
 });
 
