@@ -17,10 +17,20 @@ if (exclude) {
     console.log(`Exclude scripts by following patterns - ${color.red(exclude)}`);
 }
 
-const psList = require('ps-list');
-const scriptsPath = path.resolve(`${__dirname}/__scripts__`);
-const filePathList = fs.readdirSync(scriptsPath).filter(file => include ? new RegExp(include).test(file) : true);
-const scriptLoaded = [];
+const checkInclude = (file) => {
+    let inc = false;
+    for (let i = 0, length = include.length; i < length; i++) {
+        const pattern = include[i];
+        if (new RegExp(pattern).test(file)) {
+            inc = true;
+            break;
+        }
+    }
+    if (inc) {
+        console.log(`Include - ${color.cyan(file)}`);
+    }
+    return inc;
+};
 
 const checkExclude = (file) => {
     let ignore = false;
@@ -36,6 +46,12 @@ const checkExclude = (file) => {
     }
     return ignore;
 };
+
+const psList = require('ps-list');
+const scriptsPath = path.resolve(`${__dirname}/__scripts__`);
+const filePathList = fs.readdirSync(scriptsPath).filter(file => include && Array.isArray(include) ? checkInclude(file) : true);
+const scriptLoaded = [];
+
 
 for (let i = 0, length = filePathList.length; i < length; i++) {
     const file = filePathList[i];
