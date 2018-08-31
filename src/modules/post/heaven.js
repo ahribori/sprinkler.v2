@@ -9,7 +9,7 @@ export const heaven = async browser => {
     const ID_INPUT = '#asideMenu > div.sidebar-wrap > div.sidebar-box > form > div:nth-child(2) > div > input';
     const PW_INPUT = '#asideMenu > div.sidebar-wrap > div.sidebar-box > form > div:nth-child(3) > div > input';
     const LOGIN_BUTTON = '#asideMenu > div.sidebar-wrap > div.sidebar-box > form > div:nth-child(4) > button';
-    const CRAWLING_TITLE_EXCLUDE_PATTERN = '(뽐|뽐뿌)';
+    const CRAWLING_TITLE_EXCLUDE_PATTERN = '(뽐|뽐뿌|jpg|png|gif)';
     const CRAWLING_CONTENTS_EXCLUDE_PATTERN = '(뽐|뽐뿌)';
     const MAX_CONTENTS_LENGTH = 80;
 
