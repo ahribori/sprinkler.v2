@@ -11,15 +11,23 @@ const desiredCapabilities = (browserType, headless) => {
     if (typeof browserType !== 'string') {
         throw new Error('browserType is not a string');
     }
+    let headlessEnable = false;
+    if (process.env.NODE_ENV === 'production') {
+        headlessEnable = true;
+    }
+    if (headless === true) {
+        headlessEnable = true;
+    } else if (headless === false) {
+        headlessEnable = false;
+    }
+
     switch (browserType.toUpperCase()) {
         case 'CHROME': {
             return {
                 browserName: 'chrome',
-                chromeOptions: process.env.NODE_ENV === 'production' ? {
-                    args: ['headless'],
-                } : {
+                chromeOptions: {
                     args: [
-                        headless ? 'headless' : '--window-size=1600,900',
+                        headlessEnable ? 'headless' : '--window-size=1600,900',
                     ],
                 },
             }
@@ -28,7 +36,7 @@ const desiredCapabilities = (browserType, headless) => {
             return {
                 browserName: 'firefox',
                 'moz:firefoxOptions': {
-                    args: process.env.NODE_ENV === 'production' ? ['-headless'] : [],
+                    args: headlessEnable ? ['-headless'] : [],
                 },
             }
         }
@@ -71,5 +79,5 @@ export default {
         };
 
         manager.pushTransaction(transaction);
-    }
+    },
 }
