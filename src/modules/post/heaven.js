@@ -12,6 +12,7 @@ export const heaven = async browser => {
     const CRAWLING_TITLE_EXCLUDE_PATTERN = '(뽐|뽐뿌|jpg|png|gif)';
     const CRAWLING_CONTENTS_EXCLUDE_PATTERN = '(뽐|뽐뿌)';
     const MAX_CONTENTS_LENGTH = 80;
+    const MIN_CONTENTS_LENGTH = 10;
 
     log.info('[heaven]', `start`);
 
@@ -50,6 +51,10 @@ export const heaven = async browser => {
         const contents = await browser.getText('td.board-contents');
 
         // 컨텐츠 길이 필터
+        if (contents && contents.length < MIN_CONTENTS_LENGTH) {
+            log.info('[heaven]', `continue cause: ${contents.length} < ${MIN_CONTENTS_LENGTH}`);
+            continue;
+        }
         if (contents && contents.length > MAX_CONTENTS_LENGTH) {
             log.info('[heaven]', `continue cause: ${contents.length} > ${MAX_CONTENTS_LENGTH}`);
             continue;
