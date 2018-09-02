@@ -1,5 +1,6 @@
 import axios from 'axios';
 import log from '@logger';
+import bot from '@bot';
 
 /***
  * 티스토리에 글을 포스팅
@@ -40,10 +41,14 @@ export const postToTistoryByAccessToken = async ({ access_token, blogName, title
     try {
         await axios({
             method: 'POST',
-            url: 'https://www.tistory.com/apis/post/write',
+            url: 'https://www.tistory.com/apis/post/write?output=json',
             data: payload,
-        }).then(() => {
+        }).then((response) => {
+            const { url } = response.data.tistory;
             log.info('[post.postToTistoryByAccessToken]', 'success');
+
+            bot.sendMessage('@sprinkler_info', `[${blogName}] ${title}\n\n${url}`);
+
         });
     } catch (e) {
         log.error('[post.postToTistoryByAccessToken]', e);

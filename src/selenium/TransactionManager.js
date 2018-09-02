@@ -1,5 +1,6 @@
 import log from '@logger';
 import conf from '@config';
+import bot from '@bot';
 import EventEmitter from 'events';
 import fkill from 'fkill';
 
@@ -68,6 +69,7 @@ export default class TransactionManager {
                 await transaction();
             } catch (e) {
                 log.error(e);
+                bot.sendMessage('@sprinkler_error', e);
                 log.info('----- DONE WITH ERROR -----');
             }
 

@@ -62,6 +62,16 @@ class TelegramBot {
         }
     }
 
+    resolveChannel = (channel) => {
+        if (/^-/.test(channel)) {
+            return channel;
+        }
+        if (/^@/.test(channel)) {
+            return channelTable[channel.replace(/^@/, '')];
+        }
+        return channelTable[channel];
+    };
+
     listenMessage = (message) => {
         const { id } = message.from;
 
@@ -79,7 +89,7 @@ class TelegramBot {
                     this.sendMessage(message);
                 }, 1000);
             } else {
-                this.bot.sendMessage(channel, message)
+                this.bot.sendMessage(this.resolveChannel(channel), message)
                     .catch(error => {
                         log.error(error.message);
                     })
@@ -93,7 +103,7 @@ class TelegramBot {
                 this.sendPhoto(photo);
             }, 1000);
         } else {
-            this.bot.sendPhoto(channel, photo)
+            this.bot.sendPhoto(this.resolveChannel(channel), photo)
                 .catch(error => {
                     log.error(error.message);
                 })
