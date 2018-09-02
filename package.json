@@ -29,7 +29,8 @@
             "@config": "./src/util/config",
             "@logger": "./src/util/logger",
             "@cron": "./src/util/cron",
-            "@store": "./src/util/store"
+            "@store": "./src/util/store",
+            "@bot": "./src/util/telegram"
           }
         }
       ]
