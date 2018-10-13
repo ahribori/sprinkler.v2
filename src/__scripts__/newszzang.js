@@ -23,7 +23,7 @@ const job = new cron('0 0,30 6-23 * * *', () => {
     const timeout = ((randomTimeoutMinutes * 60) + (randomTimeoutSecond)) * 1000;
     log.info('[newszzang]', `${randomTimeoutMinutes}분 ${randomTimeoutSecond}초 후에 실행.`);
     setTimeout(() => {
-        const { rthi } = config.tistory;
+        const { newszzang } = config.tistory;
         run(async (browser) => {
             log.info('[newszzang]', `포스팅 시작`);
             const topicList = await getHotTopicList(browser);
@@ -57,11 +57,11 @@ const job = new cron('0 0,30 6-23 * * *', () => {
             await closePopup(browser);
             const auth = await tistory_oauth2_login({
                 blog_identifier: 'newszzang',
-                redirect_uri: rthi.redirect_uri,
-                id: rthi.id,
-                pw: rthi.pw,
-                client_id: rthi.client_id,
-                client_secret: rthi.client_secret,
+                redirect_uri: newszzang.redirect_uri,
+                id: newszzang.id,
+                pw: newszzang.pw,
+                client_id: newszzang.client_id,
+                client_secret: newszzang.client_secret,
             }, browser);
             await postToTistoryByAccessToken({
                 access_token: auth.access_token,

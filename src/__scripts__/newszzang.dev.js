@@ -14,7 +14,7 @@ import { closePopup } from '../modules/util/closePopup';
 import { tistory_oauth2_login } from '../modules/login/tistory';
 import { postToTistoryByAccessToken } from '../modules/post/post';
 
-const { rthi } = config.tistory;
+const { newszzang } = config.tistory;
 
 const r = () => {
     run(async (browser) => {
@@ -50,11 +50,11 @@ const r = () => {
         await closePopup(browser);
         const auth = await tistory_oauth2_login({
             blog_identifier: 'newszzang',
-            redirect_uri: rthi.redirect_uri,
-            id: rthi.id,
-            pw: rthi.pw,
-            client_id: rthi.client_id,
-            client_secret: rthi.client_secret,
+            redirect_uri: newszzang.redirect_uri,
+            id: newszzang.id,
+            pw: newszzang.pw,
+            client_id: newszzang.client_id,
+            client_secret: newszzang.client_secret,
         }, browser);
         await postToTistoryByAccessToken({
             access_token: auth.access_token,
