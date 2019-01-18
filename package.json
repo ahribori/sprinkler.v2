@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon src/app.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/ahribori/sprinkler/issues"
   },
-  "homepage": "https://github.com/ahribori/sprinkler#readme"
+  "homepage": "https://github.com/ahribori/sprinkler#readme",
+  "dependencies": {
+    "js-yaml": "^3.12.1",
+    "prettier": "^1.15.3",
+    "webdriverio": "^5.3.5"
+  }
 }
