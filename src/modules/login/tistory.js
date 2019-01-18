@@ -1,6 +1,5 @@
 import log from '@logger';
-import fs from 'fs';
-import path from 'path';
+import { load } from '../../util/store';
 
 export const login = async (id, pw, browser) => {
     log.info('[tistory.login]', 'Start login process');
@@ -21,15 +20,17 @@ export const login = async (id, pw, browser) => {
 };
 
 export const tistory_oauth2_login = async ({ blog_identifier, id, pw, client_id, client_secret, redirect_uri }, browser) => {
-    const TISTORY_ACCESS_TOKEN_PATH = path.resolve(`./logs/tistory_${blog_identifier}_access_token.json`);
 
-    if (fs.existsSync(TISTORY_ACCESS_TOKEN_PATH)) {
-        const auth = JSON.parse(fs.readFileSync(TISTORY_ACCESS_TOKEN_PATH, 'utf-8'));
+    const STORE_NAME = `tistory_${blog_identifier}_access_token`;
+
+    const cache = load(STORE_NAME);
+
+    if (cache) {
         const now = new Date().getTime();
-        const remain = auth.expiry_date - now;
+        const remain = cache.expiry_date - now;
         if (remain > 600000) {
             log.info('[tistory.tistory_oauth2_login] get access_token in cache');
-            return auth;
+            return cache;
         }
     }
 
@@ -47,5 +48,5 @@ export const tistory_oauth2_login = async ({ blog_identifier, id, pw, client_id,
     await browser.waitForExist('#oauth2_success', 30000);
 
     log.info('[tistory.tistory_oauth2_login]', 'Login');
-    return JSON.parse(fs.readFileSync(TISTORY_ACCESS_TOKEN_PATH, 'utf-8'));
+    return load(STORE_NAME);
 };

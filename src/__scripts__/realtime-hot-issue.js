@@ -15,7 +15,7 @@ import { closePopup } from '../modules/util/closePopup';
 import { tistory_oauth2_login } from '../modules/login/tistory';
 import { postToTistoryByAccessToken } from '../modules/post/post';
 
-const job = new cron('0 0,30 4-23 * * *', () => {
+const job = new cron('0 0,30 6-23 * * *', () => {
     const minutesTimeoutRange = 20;
     const secondTimeoutRange = 60;
     const randomTimeoutMinutes = Math.round(Math.random() * (minutesTimeoutRange - 1));
@@ -65,7 +65,7 @@ const job = new cron('0 0,30 4-23 * * *', () => {
             }, browser);
             await postToTistoryByAccessToken({
                 access_token: auth.access_token,
-                blogName: rthi.blog_name,
+                blogName: 'realtime-hot-issue-analyze',
                 title: post.title,
                 content: post.contents,
                 tags: post.tags.join(','),
@@ -74,4 +74,5 @@ const job = new cron('0 0,30 4-23 * * *', () => {
         });
     }, timeout);
 });
+
 job.start();

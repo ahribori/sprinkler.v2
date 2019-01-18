@@ -1,7 +1,8 @@
 import log from '@logger';
 import conf from '@config';
+import bot from '@bot';
 import EventEmitter from 'events';
-import kill from 'fkill';
+import fkill from 'fkill';
 
 const psList = require('ps-list');
 
@@ -68,6 +69,7 @@ export default class TransactionManager {
                 await transaction();
             } catch (e) {
                 log.error(e);
+                bot.sendMessage('@sprinkler_error', e);
                 log.info('----- DONE WITH ERROR -----');
             }
 
@@ -80,18 +82,19 @@ export default class TransactionManager {
     };
 
     killZombie = async () => {
+        const { kill } = conf;
         try {
-            if (!conf.process_kill_regexp) {
+            if (!kill) {
                 return;
             }
             const killList = [];
-            const chromeRegex = new RegExp(conf.process_kill_regexp, 'gi');
+            const killRegex = new RegExp(kill, 'gi');
             const processes = await psList();
             for (let i = 0; i < processes.length; i++) {
                 const process = processes[i];
-                chromeRegex.test(process.name) && killList.push(process.pid);
+                killRegex.test(process.name) && killList.push(process.pid);
             }
-            await kill(killList, {
+            await fkill(killList, {
                 force: true,
             });
         } catch (e) {

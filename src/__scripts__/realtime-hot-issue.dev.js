@@ -58,7 +58,7 @@ const r = () => {
         }, browser);
         await postToTistoryByAccessToken({
             access_token: auth.access_token,
-            blogName: rthi.blog_name,
+            blogName: 'realtime-hot-issue-analyze',
             title: post.title,
             content: post.contents,
             tags: post.tags.join(','),

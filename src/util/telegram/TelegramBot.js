@@ -1,22 +1,18 @@
 import config from '@config';
-import fs from 'fs';
-import path from 'path';
 import log from '@logger';
+import { save, load } from '../store';
 
 const Bot = require('node-telegram-bot-api');
 
 const token = config.telegram.telegramBotToken || 'YOUR_TELEGRAM_BOT_TOKEN';
-const channels = config.telegram.telegramChannels || '';
+const channels = config.telegram.telegramChannels || [];
 const telegramId = config.telegram.telegramId;
 
-const channelTablePath = path.resolve('logs/channels.json');
-fs.existsSync(channelTablePath) || fs.writeFileSync(channelTablePath, JSON.stringify({}), 'utf-8');
-const file = fs.readFileSync(channelTablePath);
-const channelTable = JSON.parse(file);
+const channelTable = load('telegram_channels') || {};
 
 let instance = null;
 
-export default class TelegramBot {
+class TelegramBot {
     constructor() {
         if (!instance) {
             instance = this;
@@ -31,15 +27,15 @@ export default class TelegramBot {
             const checkStackCount = () => {
                 if (stackCount === 0) {
                     this.initialized = true;
-                    fs.writeFileSync(channelTablePath, JSON.stringify(channelTable, null, '\t'), 'utf-8');
+                    save('telegram_channels', channelTable);
                 }
             };
 
-            channels.toString().split(',').forEach(channel => {
-                if (/^@/.test(channel)) {
+            channels.forEach(channel => {
+                if (!/^-/.test(channel)) {
                     if (!channelTable[channel]) {
                         stackCount++;
-                        this.bot.sendMessage(channel, '채널 ID를 확인하기 위한 메시지')
+                        this.bot.sendMessage(`@${channel}`, '채널 ID를 확인하기 위한 메시지')
                             .then((msg) => {
                                 this.chatList.push(msg.chat.id);
                                 channelTable[channel] = msg.chat.id;
@@ -61,10 +57,20 @@ export default class TelegramBot {
             checkStackCount()
         }
         return {
-            sendMessage: this.sendMessage,
-            sendPhoto: this.sendPhoto,
+            sendMessage: instance.sendMessage,
+            sendPhoto: instance.sendPhoto,
         }
     }
+
+    resolveChannel = (channel) => {
+        if (/^-/.test(channel)) {
+            return channel;
+        }
+        if (/^@/.test(channel)) {
+            return channelTable[channel.replace(/^@/, '')];
+        }
+        return channelTable[channel];
+    };
 
     listenMessage = (message) => {
         const { id } = message.from;
@@ -76,36 +82,33 @@ export default class TelegramBot {
         }
     };
 
-    sendMessage = (message) => {
+    sendMessage = (channel, message) => {
         if (typeof message === 'string') {
             if (!this.initialized) {
                 setTimeout(() => {
                     this.sendMessage(message);
                 }, 1000);
             } else {
-                this.chatList.forEach(async chat => {
-                    this.bot.sendMessage(chat, message)
-                        .catch(error => {
-                            log.error(error.message);
-                        });
-                });
+                this.bot.sendMessage(this.resolveChannel(channel), message)
+                    .catch(error => {
+                        log.error(error.message);
+                    })
             }
         }
     };
 
-    sendPhoto = (photo) => {
+    sendPhoto = (channel, photo) => {
         if (!this.initialized) {
             setTimeout(() => {
                 this.sendPhoto(photo);
             }, 1000);
         } else {
-            this.chatList.forEach(async chat => {
-                this.bot.sendPhoto(chat, photo)
-                    .catch(error => {
-                        log.error(error.message);
-                    });
-            });
+            this.bot.sendPhoto(this.resolveChannel(channel), photo)
+                .catch(error => {
+                    log.error(error.message);
+                })
         }
     }
-
 }
+
+export default new TelegramBot();
