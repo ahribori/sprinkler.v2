@@ -7,11 +7,8 @@ const { maxSession: maxSessionConfig } = coreConfig || {};
 const EVENT_TYPE = {
   PUSH: 'push',
   POP: 'pop',
-};
-
-const STATUS = {
-  WAITING: 'WAITING',
-  RUNNING: 'RUNNING',
+  START: 'start',
+  DONE: 'done',
 };
 
 let instance = null;
@@ -22,7 +19,6 @@ class TransactionManager {
       instance = this;
       this.event = new EventEmitter();
       this.transactionQueue = [];
-      this.status = STATUS.WAITING;
       this.maxSession = maxSessionConfig || 1;
       this.currentSessionCount = 0;
       this.bindEventListener();
@@ -31,64 +27,94 @@ class TransactionManager {
   }
 
   async executeTransaction() {
-    console.log('executeTransaction');
-    if (this.status !== STATUS.RUNNING) {
-      if (this.transactionQueue.length === 0) {
-        return;
-      }
-      const transaction = this.transactionQueue[0];
-      const { browserReady, onError, options } = transaction;
+    if (this.transactionQueue.length === 0) {
+      return;
+    }
+
+    if (this.currentSessionCount < this.maxSession) {
+      const transaction = this.popTransaction();
+      this.event.emit(EVENT_TYPE.START, transaction);
+      const { task, onError, options } = transaction;
       const { enableAutoDeleteSession, ...otherOptions } = options;
 
       if (
-        browserReady &&
-        typeof browserReady === 'function' &&
-        browserReady.constructor.name === 'AsyncFunction'
+        task &&
+        typeof task === 'function' &&
+        task.constructor.name === 'AsyncFunction'
       ) {
-        this.status = STATUS.RUNNING;
+        this.currentSessionCount++;
         const browser = await remote(otherOptions);
 
-        await browserReady(browser);
-        if (enableAutoDeleteSession) {
-          await browser.deleteSession();
+        try {
+          await task(browser);
+          if (enableAutoDeleteSession) {
+            await browser.deleteSession();
+          }
+        } catch (e) {
+          try {
+            await browser.deleteSession();
+          } catch (e) {
+            onError(e);
+          }
+          onError(e);
         }
-      }
 
-      this.status = STATUS.WAITING;
-      this.popTransaction();
+        this.currentSessionCount--;
+        this.event.emit(EVENT_TYPE.DONE, transaction);
+      } else {
+        console.warn('Required: Async function task() should be implement');
+      }
       return this.executeTransaction();
     }
   }
 
   pushTransaction(transaction) {
-    console.log('pushTransaction');
-    this.transactionQueue.push(transaction);
-    this.event.emit(EVENT_TYPE.PUSH);
+    const Transaction = require('./Transaction');
+    if (transaction instanceof Transaction) {
+      this.transactionQueue.push(transaction);
+      this.executeTransaction();
+      this.event.emit(EVENT_TYPE.PUSH, transaction);
+    }
   }
 
   popTransaction() {
-    console.log('popTransaction');
-    this.transactionQueue.shift();
-    this.event.emit(EVENT_TYPE.POP);
+    const transaction = this.transactionQueue.shift();
+    this.event.emit(EVENT_TYPE.POP, transaction);
+    return transaction;
   }
 
-  onPush() {
-    console.log('onPush');
-    this.executeTransaction();
+  onPush(transaction) {
+    const { onPush } = transaction;
+    if (onPush && typeof onPush === 'function') {
+      onPush();
+    }
   }
 
-  onTransactionStart() {}
+  onStart(transaction) {
+    const { onStart } = transaction;
+    if (onStart && typeof onStart === 'function') {
+      onStart();
+    }
+  }
 
-  onTransactionEnd() {}
+  onDone(transaction) {
+    const { onDone } = transaction;
+    if (onDone && typeof onDone === 'function') {
+      onDone();
+    }
+  }
 
-  onPop() {
-    console.log('onPop');
+  onPop(transaction) {
+    const { onPop } = transaction;
+    if (onPop && typeof onPop === 'function') {
+      onPop();
+    }
   }
 
   bindEventListener() {
     this.event.on('push', this.onPush.bind(this));
-    this.event.on('start', this.onTransactionStart.bind(this));
-    this.event.on('end', this.onTransactionEnd.bind(this));
+    this.event.on('start', this.onStart.bind(this));
+    this.event.on('done', this.onDone.bind(this));
     this.event.on('pop', this.onPop.bind(this));
   }
 }
