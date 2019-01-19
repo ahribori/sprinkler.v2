@@ -17,13 +17,26 @@ const customOption = {
 class Transaction {
   constructor(options) {
     this.options = Object.assign({}, defaultOption, customOption, options);
-    this.manager = new TransactionManager();
-    this.manager.pushTransaction(this);
   }
 
-  browserReady() {}
+  run() {
+    const transactionManager = new TransactionManager();
+    transactionManager.pushTransaction(this);
+  }
 
-  onError() {}
+  schedule(cron) {}
+
+  onPush() {}
+
+  onStart() {}
+
+  onDone() {}
+
+  onPop() {}
+
+  onError(e) {
+    console.error(e);
+  }
 }
 
 module.exports = Transaction;
