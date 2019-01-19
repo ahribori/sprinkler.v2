@@ -1,14 +1,18 @@
 const cron = require('cron');
+const config = require('../config');
 const TransactionManager = require('./TransactionManager');
 
+const { selenium } = config;
+const { protocol, host, port, browser, logLevel } = selenium;
+
 const defaultOption = {
-  logLevel: 'info',
+  logLevel: logLevel || 'info',
   capabilities: {
-    browserName: 'chrome',
+    browserName: browser || 'chrome',
   },
-  protocol: 'http',
-  host: '127.0.0.1',
-  port: 4444,
+  protocol: protocol || 'http',
+  host: host || '127.0.0.1',
+  port: port || 4444,
 };
 
 const customOption = {

@@ -2,3 +2,15 @@
 scripts:
   includePattern:
   excludePattern:
+
+# core
+core:
+  maxSession: 1
+
+# selenium
+selenium:
+  protocol: http
+  host: 127.0.0.1
+  port: 4444
+  browser: chrome
+  logLevel: info
