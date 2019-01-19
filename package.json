@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ahribori/sprinkler#readme",
   "dependencies": {
+    "cron": "^1.6.0",
     "js-yaml": "^3.12.1",
     "prettier": "^1.15.3",
     "webdriverio": "^5.3.5"

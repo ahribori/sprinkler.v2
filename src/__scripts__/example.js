@@ -18,4 +18,6 @@ class ExampleTransaction extends Transaction {
   }
 }
 
-new ExampleTransaction({ logLevel: 'error' }).run();
+const exampleTransaction = new ExampleTransaction({ logLevel: 'error' });
+
+// exampleTransaction.schedule('00 * * * * *');
