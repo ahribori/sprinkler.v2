@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/app.js"
+    "start": "nodemon src/app.js",
+    "postinstall": "selenium-standalone install"
   },
   "repository": {
     "type": "git",
@@ -17,9 +18,10 @@
   },
   "homepage": "https://github.com/ahribori/sprinkler#readme",
   "dependencies": {
-    "cron": "^1.6.0",
+    "selenium-standalone": "latest",
+    "webdriverio": "^5.3.5",
     "js-yaml": "^3.12.1",
-    "prettier": "^1.15.3",
-    "webdriverio": "^5.3.5"
+    "cron": "^1.6.0",
+    "prettier": "^1.15.3"
   }
 }

@@ -1,8 +1,10 @@
+const Selenium = require('selenium-standalone');
 const fs = require('fs');
 const path = require('path');
 const { scriptsDirPath } = require('./config/path');
-const { scripts } = require('./config');
+const { scripts, selenium } = require('./config');
 const { includePattern, excludePattern } = scripts;
+const { standalone } = selenium;
 
 function loadScript(_path) {
   const isDirectory = fs.lstatSync(_path).isDirectory();
@@ -33,4 +35,16 @@ function loadScript(_path) {
   }
 }
 
-loadScript(scriptsDirPath);
+if (standalone === true) {
+  Selenium.start((err, child) => {
+    if (err) {
+      return console.error(err);
+    }
+    child.stderr.on('data', data => {
+      console.log(data.toString());
+    });
+    loadScript(scriptsDirPath);
+  });
+} else {
+  loadScript(scriptsDirPath);
+}

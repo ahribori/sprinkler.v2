@@ -10,7 +10,7 @@ try {
     doc = null;
   }
 } catch (e) {
-  logger.error(e.message);
+  console.error(e.message);
 }
 
 if (!doc) {

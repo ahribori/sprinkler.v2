@@ -14,3 +14,4 @@ selenium:
   port: 4444
   browser: chrome
   logLevel: info
+  standalone: true
