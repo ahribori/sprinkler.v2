@@ -37,15 +37,11 @@ class TransactionManager {
       const { task, onError, options } = transaction;
       const { enableAutoDeleteSession, ...otherOptions } = options;
 
-      if (
-        task &&
-        typeof task === 'function' &&
-        task.constructor.name === 'AsyncFunction'
-      ) {
-        this.currentSessionCount++;
-        const browser = await remote(otherOptions);
-
+      if (task && typeof task === 'function' && task.constructor.name === 'AsyncFunction') {
         try {
+          this.currentSessionCount++;
+          const browser = await remote(otherOptions);
+
           await task(browser);
           if (enableAutoDeleteSession) {
             await browser.deleteSession();
