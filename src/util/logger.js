@@ -1,6 +1,6 @@
 require('winston-daily-rotate-file');
 const { createLogger, format, transports } = require('winston');
-const { combine, timestamp, label, colorize, printf } = format;
+const { combine, timestamp, splat, colorize, printf } = format;
 
 const logFormat = printf(info => {
   const { timestamp, level, message } = info;
@@ -15,7 +15,7 @@ const dailyRotateCombineTransport = new transports.DailyRotateFile({
   maxSize: '20m',
   maxFiles: '7d',
   dirname: './log',
-  format: combine(timestamp(), logFormat),
+  format: combine(splat(), timestamp(), logFormat),
 });
 
 const dailyRotateErrorTransport = new transports.DailyRotateFile({
@@ -26,7 +26,7 @@ const dailyRotateErrorTransport = new transports.DailyRotateFile({
   maxSize: '20m',
   maxFiles: '7d',
   dirname: './log',
-  format: combine(timestamp(), logFormat),
+  format: combine(splat(), timestamp(), logFormat),
 });
 
 dailyRotateCombineTransport.on('rotate', (oldFilename, newFilename) => {
@@ -38,11 +38,13 @@ dailyRotateErrorTransport.on('rotate', (oldFilename, newFilename) => {
 });
 
 const consoleTransport = new transports.Console({
-  format: combine(timestamp(), colorize(), logFormat),
+  format: combine(splat(), timestamp(), colorize(), logFormat),
 });
 
 const logger = createLogger({
   transports: [dailyRotateCombineTransport, dailyRotateErrorTransport, consoleTransport],
 });
+
+export const log = logger;
 
 export default logger;

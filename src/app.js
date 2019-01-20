@@ -1,3 +1,5 @@
+import logger from './util/logger';
+
 require('module-alias/register');
 const Selenium = require('selenium-standalone');
 const fs = require('fs');
@@ -41,8 +43,9 @@ if (standalone === true) {
     if (err) {
       return console.error(err);
     }
+    logger.info('Selenium standalone server started.');
     child.stderr.on('data', data => {
-      console.log(data.toString());
+      // console.log(data.toString());
     });
     loadScript(scriptsDirPath);
   });
