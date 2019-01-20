@@ -3,5 +3,7 @@
 node_modules
 config.yml
 config.yaml
+dist
 logs
+log
 store
