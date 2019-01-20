@@ -1,6 +1,6 @@
-const cron = require('cron');
-const config = require('../config');
-const TransactionManager = require('./TransactionManager');
+import cron from 'cron';
+import config from '../config';
+import TransactionManager from './TransactionManager';
 
 const { selenium } = config;
 const { protocol, host, port, browser, logLevel } = selenium;
@@ -53,6 +53,10 @@ class Transaction {
     return this;
   }
 
+  batch(cronTime) {
+    return this.schedule(cronTime);
+  }
+
   onPush() {}
 
   onStart() {}
@@ -65,5 +69,4 @@ class Transaction {
     console.error(e);
   }
 }
-
-module.exports = Transaction;
+export default Transaction;

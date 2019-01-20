@@ -1,6 +1,8 @@
-const { remote } = require('webdriverio');
-const EventEmitter = require('events');
-const config = require('../config');
+import { remote } from 'webdriverio';
+import EventEmitter from 'events';
+import Transaction from './Transaction';
+import config from '../config';
+
 const { core: coreConfig } = config;
 const { maxSession: maxSessionConfig } = coreConfig || {};
 
@@ -26,7 +28,7 @@ class TransactionManager {
     return instance;
   }
 
-  async executeTransaction() {
+  executeTransaction = async () => {
     if (this.transactionQueue.length === 0) {
       return;
     }
@@ -38,21 +40,26 @@ class TransactionManager {
       const { enableAutoDeleteSession, ...otherOptions } = options;
 
       if (task && typeof task === 'function' && task.constructor.name === 'AsyncFunction') {
+        let browser;
         try {
+          browser = await remote(otherOptions);
           this.currentSessionCount++;
-          const browser = await remote(otherOptions);
+        } catch (e) {
+          return onError(e);
+        }
 
+        try {
           await task(browser);
           if (enableAutoDeleteSession) {
             await browser.deleteSession();
           }
         } catch (e) {
+          onError(e);
           try {
             await browser.deleteSession();
           } catch (e) {
             onError(e);
           }
-          onError(e);
         }
 
         this.currentSessionCount--;
@@ -62,57 +69,56 @@ class TransactionManager {
       }
       return this.executeTransaction();
     }
-  }
+  };
 
-  pushTransaction(transaction) {
-    const Transaction = require('./Transaction');
+  pushTransaction = transaction => {
     if (transaction instanceof Transaction) {
       this.transactionQueue.push(transaction);
       this.executeTransaction();
       this.event.emit(EVENT_TYPE.PUSH, transaction);
     }
-  }
+  };
 
-  popTransaction() {
+  popTransaction = () => {
     const transaction = this.transactionQueue.shift();
     this.event.emit(EVENT_TYPE.POP, transaction);
     return transaction;
-  }
+  };
 
-  onPush(transaction) {
+  onPush = transaction => {
     const { onPush } = transaction;
     if (onPush && typeof onPush === 'function') {
       onPush();
     }
-  }
+  };
 
-  onStart(transaction) {
+  onStart = transaction => {
     const { onStart } = transaction;
     if (onStart && typeof onStart === 'function') {
       onStart();
     }
-  }
+  };
 
-  onDone(transaction) {
+  onDone = transaction => {
     const { onDone } = transaction;
     if (onDone && typeof onDone === 'function') {
       onDone();
     }
-  }
+  };
 
-  onPop(transaction) {
+  onPop = transaction => {
     const { onPop } = transaction;
     if (onPop && typeof onPop === 'function') {
       onPop();
     }
-  }
+  };
 
-  bindEventListener() {
-    this.event.on('push', this.onPush.bind(this));
-    this.event.on('start', this.onStart.bind(this));
-    this.event.on('done', this.onDone.bind(this));
-    this.event.on('pop', this.onPop.bind(this));
-  }
+  bindEventListener = () => {
+    this.event.on('push', this.onPush);
+    this.event.on('start', this.onStart);
+    this.event.on('done', this.onDone);
+    this.event.on('pop', this.onPop);
+  };
 }
 
-module.exports = TransactionManager;
+export default TransactionManager;
