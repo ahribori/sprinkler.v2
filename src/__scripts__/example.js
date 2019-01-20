@@ -1,8 +1,10 @@
-const Transaction = require('../core/Transaction');
+import Transaction from '../core/Transaction';
+import { translateToJapanese } from '../modules/translate/googleTranslate';
 
 class ExampleTransaction extends Transaction {
   async task(browser) {
-    await browser.url('http://naver.com');
+    const result = await translateToJapanese('좋은 아침입니다.', browser);
+    console.log(result);
   }
 
   onStart() {
@@ -18,6 +20,6 @@ class ExampleTransaction extends Transaction {
   }
 }
 
-const exampleTransaction = new ExampleTransaction({ logLevel: 'error' });
+const exampleTransaction = new ExampleTransaction({ logLevel: 'error', browser: 'firefox' }).run();
 
 // exampleTransaction.schedule('00 * * * * *');
