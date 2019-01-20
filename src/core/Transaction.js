@@ -6,6 +6,25 @@ const { selenium } = config;
 const { protocol, host, port, browser, logLevel } = selenium;
 
 class Transaction {
+  constructor(options) {
+    this.options = Object.assign(
+      {},
+      {
+        logLevel: logLevel || 'info',
+        capabilities:
+          this.getCapabilities(options)[options.browser] ||
+          this.getCapabilities(options)[browser] ||
+          this.getCapabilities(options)['chrome'],
+        protocol: protocol || 'http',
+        host: host || '127.0.0.1',
+        port: port || 4444,
+      },
+      this.getCustomOptions(),
+      options,
+    );
+    console.log(JSON.stringify(this.options, null, 2));
+  }
+
   getCapabilities = ({ headless = true }) => ({
     chrome: {
       browserName: 'chrome',
@@ -21,28 +40,9 @@ class Transaction {
     },
   });
 
-  customOption = {
+  getCustomOptions = () => ({
     enableAutoDeleteSession: true,
-  };
-
-  constructor(options) {
-    this.options = Object.assign(
-      {},
-      {
-        logLevel: logLevel || 'info',
-        capabilities:
-          this.getCapabilities(options)[options.browser] ||
-          this.getCapabilities(options)[browser] ||
-          this.getCapabilities(options)['chrome'],
-        protocol: protocol || 'http',
-        host: host || '127.0.0.1',
-        port: port || 4444,
-      },
-      this.customOption,
-      options,
-    );
-    console.log(JSON.stringify(this.options, null, 2));
-  }
+  });
 
   run() {
     const transactionManager = new TransactionManager();
