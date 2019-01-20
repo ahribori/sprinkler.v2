@@ -22,11 +22,14 @@
   "dependencies": {
     "cron": "^1.6.0",
     "js-yaml": "^3.12.1",
+    "module-alias": "^2.1.0",
     "nodemon": "^1.18.9",
     "prettier": "^1.15.3",
     "rimraf": "^2.6.3",
     "selenium-standalone": "latest",
-    "webdriverio": "^5.3.5"
+    "webdriverio": "^5.3.5",
+    "winston": "^3.1.0",
+    "winston-daily-rotate-file": "^3.6.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -40,7 +43,12 @@
   },
   "babel": {
     "plugins": [
-      ["@babel/plugin-proposal-decorators", { "legacy": true }],
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ],
       "@babel/plugin-proposal-class-properties",
       "@babel/plugin-proposal-optional-chaining",
       "@babel/plugin-proposal-nullish-coalescing-operator",
