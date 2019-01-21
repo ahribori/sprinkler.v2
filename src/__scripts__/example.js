@@ -1,10 +1,7 @@
 import Transaction from '../core/Transaction';
-import { translateToJapanese } from '../modules/translate/googleTranslate';
 
 class ExampleTransaction extends Transaction {
   async task(browser) {
-    const result = await translateToJapanese('좋은 아침입니다.', browser);
-    console.log(result);
   }
 
   onStart() {
