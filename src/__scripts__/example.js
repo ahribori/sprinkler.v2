@@ -17,6 +17,6 @@ class ExampleTransaction extends Transaction {
   }
 }
 
-const exampleTransaction = new ExampleTransaction({ logLevel: 'error', browser: 'firefox' }).run();
+const exampleTransaction = new ExampleTransaction({ logLevel: 'error', browser: 'firefox', headless: false }).run();
 
 // exampleTransaction.schedule('00 * * * * *');
